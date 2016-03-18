@@ -1,0 +1,48 @@
+<configuration>
+	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger.%M\(%line\) - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" 
+		/> -->
+
+	<!-- logger for dev -->
+	<logger name="com.wmsl" level="DEBUG" />
+	
+	<logger name="com.wealth.commu" level="ERROR" />
+	<logger name="com.wealth.commu.server.impl.ServiceLocator"
+		level="OFF">
+		<!-- for ignore error .\server.lic (The system cannot find the file specified) -->
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="com.wealth.bwm.impl.contact" level="INFO" />
+	<logger name="com.wealth.bwm.impl.bizlogic" level="INFO" />
+
+	<!-- logger for application -->
+	<logger name="application.log" level="INFO">
+		<!-- <appender-ref ref="FILE-APPLICATION" /> -->
+		<appender-ref ref="DB-APPLICATION" />
+	</logger>
+	<logger name="system.error" level="INFO">
+		<appender-ref ref="FILE-ERROR" />
+	</logger>
+	<logger name="system.access" level="INFO">
+		<appender-ref ref="FILE-ACCESS" />
+	</logger>
+
+	<logger name="org.hibernate.type" level="ERROR" />
+	<logger name="org.hibernate" level="ERROR" />
+
+<!-- 	  <logger name="org.hibernate.type" level="ALL" /> -->
+<!-- 	  <logger name="org.hibernate" level="DEBUG" /> -->
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT" />
+	</root>
+
+</configuration>
