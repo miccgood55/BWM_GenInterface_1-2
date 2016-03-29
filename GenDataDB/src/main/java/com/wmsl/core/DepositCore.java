@@ -2,26 +2,29 @@ package com.wmsl.core;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-//import com.wealth.bwm.common.impl.entity.company.Counterparty;
+import com.wealth.bwm.batch.impl.entity.cp.account.AccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.BankAccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.SubAccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.SubBankAccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.execution.DepositExecutionBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.execution.ExecutionBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.DepositOutstandingBacth;
+import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.OutstandingBatch;
 import com.wealth.bwm.impl.dao.cp.account.SubBankAccountDao;
-import com.wealth.bwm.impl.entity.cp.account.SubAccount;
 import com.wealth.bwm.impl.entity.cp.account.SubBankAccount;
-import com.wealth.bwm.impl.entity.cp.account.execution.DepositExecution;
-import com.wealth.bwm.impl.entity.cp.account.execution.Execution;
-import com.wealth.bwm.impl.entity.cp.account.outstanding.DepositOutstanding;
-import com.wealth.bwm.impl.entity.cp.account.outstanding.Outstanding;
 import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.Constants;
 
 @Component
-public class DepositCore extends GenBigDataCore {
+public class DepositCore extends GenBigDataBizCore {
 
 //	private final Logger log = LoggerFactory.getLogger(DepositCore.class);
  
@@ -32,8 +35,29 @@ public class DepositCore extends GenBigDataCore {
 	}
 
 	@Override
-	public void subOutstandingToString(BufferedWriter bufferedWriter, Outstanding outstanding) throws IOException {
-		DepositOutstanding depOut = (DepositOutstanding)outstanding;
+	public void accToString(BufferedWriter bufferedWriter, AccountBatch account) throws IOException {
+		BankAccountBatch bankAccount = (BankAccountBatch)account;
+
+//		ACCOUNTID *	ACCOUNTTYPE	CURRENCYID	BRANCHID	COUPONRATE	COUPONFREQUENCY
+//		37010	1		
+
+		bufferedWriter.write(prepareData(bankAccount.getAccountId()));bufferedWriter.write(COMMA_STRING);
+		bufferedWriter.write(prepareData(bankAccount.getAccountType()) + COMMA_STRING);
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
+		
+	}
+
+	@Override
+	public void subAccToString(BufferedWriter bufferedWriter, SubAccountBatch subAccount) throws IOException {
+		SubBankAccountBatch subBankAccount = (SubBankAccountBatch)subAccount;
+		bufferedWriter.write(prepareData(subBankAccount.getSubAccountId()));bufferedWriter.write(COMMA_STRING);
+//		SUBACCOUNTID *	EFFECTIVERATE	PARVALUE	PRODUCTTERMUNIT	PRODUCTTERM
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING + COMMA_STRING);
+	}
+
+	@Override
+	public void subOutstandingToString(BufferedWriter bufferedWriter, OutstandingBatch outstanding) throws IOException {
+		DepositOutstandingBacth depOut = (DepositOutstandingBacth)outstanding;
 		
 		bufferedWriter.write(prepareData(depOut.getOutstandingId()) + COMMA_STRING);
 		bufferedWriter.write(prepareData(depOut.getCallMargin()) + COMMA_STRING);
@@ -48,8 +72,8 @@ public class DepositCore extends GenBigDataCore {
 	}
 
 	@Override
-	public void subExecutionToString(BufferedWriter bufferedWriter, Execution execution) throws IOException {
-		DepositExecution depExe = (DepositExecution)execution;
+	public void subExecutionToString(BufferedWriter bufferedWriter, ExecutionBatch execution) throws IOException {
+		DepositExecutionBatch depExe = (DepositExecutionBatch)execution;
 		
 		bufferedWriter.write(prepareData(depExe.getExecutionId()));
 
@@ -58,7 +82,7 @@ public class DepositCore extends GenBigDataCore {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SubAccount> getSubAccount() throws InfoEntityServiceException, ServerEntityServiceException {
+	public List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException {
 		
 		Integer dataFrom = getDataFrom();
 		Integer dataTo = getDataTo();
@@ -68,8 +92,28 @@ public class DepositCore extends GenBigDataCore {
 		} else {
 			subBankAccounts = subBankAccountDao.getObjectList(dataFrom, dataTo , true, false);
 		}
-		List<? extends SubAccount> subAccounts = subBankAccounts;
-		return (List<SubAccount>) subAccounts;
+
+		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
+		for (SubBankAccount subBankAccount : subBankAccounts) {
+			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
+			subBankAccountBatch.setSubAccountId(subBankAccount.getSubAccountId());
+			subBankAccountBatchs.add(subBankAccountBatch);
+		}
+		
+		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
+		return (List<SubAccountBatch>) subAccounts;
+//		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
+//		return (List<SubAccountBatch>) subAccounts;
+	}
+
+	@Override
+	public String getFilenameAcc() {
+		return Constants.FILE_NAME_DEP_ACC + getStopDate().get(Calendar.YEAR);
+	}
+
+	@Override
+	public String getFilenameSubAcc() {
+		return Constants.FILE_NAME_DEP_SUBACC + getStopDate().get(Calendar.YEAR);
 	}
 
 	@Override
@@ -80,6 +124,16 @@ public class DepositCore extends GenBigDataCore {
 	@Override
 	public String getFilenameTx() {
 		return Constants.FILE_NAME_DEP_TX + getStopDate().get(Calendar.YEAR);
+	}
+	
+	@Override
+	public String getFilenameAccount() {
+		return Constants.FILE_NAME_ACCOUNT_DEPOSIT + getStopDate().get(Calendar.YEAR);
+	}
+
+	@Override
+	public String getFilenameSubAccount() {
+		return Constants.FILE_NAME_SUBACCOUNT_DEPOSIT + getStopDate().get(Calendar.YEAR);
 	}
 
 	@Override
@@ -93,13 +147,30 @@ public class DepositCore extends GenBigDataCore {
 	}
 
 	@Override
-	public Outstanding getOutstanding() {
-		return new DepositOutstanding();
+	public OutstandingBatch getOutstanding() {
+		return new DepositOutstandingBacth();
 	}
 
 	@Override
-	public Execution getExecution() {
-		return new DepositExecution();
+	public ExecutionBatch getExecution() {
+		return new DepositExecutionBatch();
+	}
+
+	@Override
+	public AccountBatch getAccount() {
+		BankAccountBatch bankAccount = new BankAccountBatch();
+		bankAccount.setAccountType(1);
+		return bankAccount;
+	}
+
+	@Override
+	public SubAccountBatch getSubAccount() {
+		return new SubBankAccountBatch();
+	}
+
+	@Override
+	public Integer getBranchId() {
+		return 1;
 	}
 
 }

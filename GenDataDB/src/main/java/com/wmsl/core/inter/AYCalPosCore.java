@@ -3,6 +3,7 @@ package com.wmsl.core.inter;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -17,10 +18,10 @@ import com.wmsl.Constants;
 public class AYCalPosCore extends AYPositionCore {
 
 
-	private static final BigDecimal INTEREST_RATE = new BigDecimal(1.000000);
-	private static final BigDecimal BALANCE = new BigDecimal(253548.20);
-	private static final BigDecimal FACE_VALUE = new BigDecimal(250000.00);
-	private static final BigDecimal INSTALLMENT_AMOUNT	 = new BigDecimal(4462.62);
+	private static final BigDecimal INTEREST_RATE = new BigDecimal(1.000000).setScale(4, RoundingMode.HALF_UP);
+	private static final BigDecimal BALANCE = new BigDecimal(253548.20).setScale(4, RoundingMode.HALF_UP);
+	private static final BigDecimal FACE_VALUE = new BigDecimal(250000.00).setScale(4, RoundingMode.HALF_UP);
+	private static final BigDecimal INSTALLMENT_AMOUNT	 = new BigDecimal(4462.62).setScale(4, RoundingMode.HALF_UP);
 
 
 	@Override
@@ -92,10 +93,10 @@ public class AYCalPosCore extends AYPositionCore {
 		ayCalPos.setPaymentDueDate(CURRENT_DATE_FORMAT);
 		ayCalPos.setStartDate(CURRENT_DATE_FORMAT);
 		ayCalPos.setInstallmentAmount(INSTALLMENT_AMOUNT);
-		ayCalPos.setAccountName("ACCOUNT_NAME_" + seq);
-		ayCalPos.setIssuerCode("CAL");
+		ayCalPos.setAccountName("ACCOUNT_NAME_AYCAL_" + seq);
+		ayCalPos.setIssuerCode("AYCAL");
 		ayCalPos.setCifCode(customerInfo.getCifCode());
-//		ayCalPos.setMergeCIFCode(mergeCIFCode);
+		ayCalPos.setMergeCIFCode("");
 		ayCalPos.setDelinquencyDesc("30 DAYS");
 		ayCalPos.setCloseDate(CURRENT_DATE_FORMAT);
 		ayCalPos.setAgentCode("BAY");

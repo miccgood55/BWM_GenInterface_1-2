@@ -2,25 +2,28 @@ package com.wmsl.core;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.wealth.bwm.impl.entity.cp.account.SubAccount;
 import com.wealth.bwm.impl.entity.cp.account.SubUnitTrustAccount;
-import com.wealth.bwm.impl.entity.cp.account.execution.Execution;
-import com.wealth.bwm.impl.entity.cp.account.execution.UnitTrustExecution;
-import com.wealth.bwm.impl.entity.cp.account.outstanding.UnitTrustOutstanding;
-import com.wealth.bwm.impl.entity.cp.account.outstanding.Outstanding;
+import com.wealth.bwm.batch.impl.entity.cp.account.AccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.SubAccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.SubBankAccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.execution.ExecutionBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.execution.UnitTrustExecutionBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.OutstandingBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.UnitTrustOutstandingBatch;
 import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.Constants;
 import com.wmsl.dao.impl.SubUnitTrustAccountDao;
 
 @Component
-public class UnitHolderCore extends GenBigDataCore {
+public class UnitHolderCore extends GenBigDataBizCore {
 
 //	private final Logger log = LoggerFactory.getLogger(UnitHolderCore.class);
  
@@ -31,16 +34,16 @@ public class UnitHolderCore extends GenBigDataCore {
 	}
 	
 	@Override
-	public void subOutstandingToString(BufferedWriter bufferedWriter, Outstanding outstanding) throws IOException {
-		UnitTrustOutstanding unitOut = (UnitTrustOutstanding)outstanding;
+	public void subOutstandingToString(BufferedWriter bufferedWriter, OutstandingBatch outstanding) throws IOException {
+		UnitTrustOutstandingBatch unitOut = (UnitTrustOutstandingBatch)outstanding;
 		bufferedWriter.write(prepareData(unitOut.getOutstandingId()));
 		bufferedWriter.write(COMMA_STRING);bufferedWriter.write(COMMA_STRING);bufferedWriter.write(COMMA_STRING );
 		bufferedWriter.newLine();
 	}
 
 	@Override
-	public void subExecutionToString(BufferedWriter bufferedWriter, Execution execution) throws IOException {
-		UnitTrustExecution unitExe = (UnitTrustExecution)execution;
+	public void subExecutionToString(BufferedWriter bufferedWriter, ExecutionBatch execution) throws IOException {
+		UnitTrustExecutionBatch unitExe = (UnitTrustExecutionBatch)execution;
 		
 		bufferedWriter.write(prepareData(unitExe.getExecutionId()) + COMMA_STRING);
 		bufferedWriter.write(prepareData(unitExe.getNav()) + COMMA_STRING);
@@ -52,7 +55,7 @@ public class UnitHolderCore extends GenBigDataCore {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SubAccount> getSubAccount() throws InfoEntityServiceException, ServerEntityServiceException {
+	public List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException {
 		
 
 		Integer dataFrom = getDataFrom();
@@ -63,8 +66,19 @@ public class UnitHolderCore extends GenBigDataCore {
 		} else {
 			subUnitTrustAccounts = subUnitTrustAccountDao.getObjectList(dataFrom, dataTo , true, false);
 		}
-		List<? extends SubAccount> subAccounts = subUnitTrustAccounts;
-		return (List<SubAccount>) subAccounts;
+
+		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
+		for (SubUnitTrustAccount subUnitTrustAccount : subUnitTrustAccounts) {
+			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
+			subBankAccountBatch.setSubAccountId(subUnitTrustAccount.getSubAccountId());
+			subBankAccountBatchs.add(subBankAccountBatch);
+		}
+		
+		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
+		return (List<SubAccountBatch>) subAccounts;
+		
+//		List<? extends SubAccount> subAccounts = subUnitTrustAccounts;
+//		return (List<SubAccount>) subAccounts;
 	}
 
 	@Override
@@ -88,13 +102,67 @@ public class UnitHolderCore extends GenBigDataCore {
 	}
 
 	@Override
-	public Outstanding getOutstanding() {
-		return new UnitTrustOutstanding();
+	public OutstandingBatch getOutstanding() {
+		return new UnitTrustOutstandingBatch();
 	}
 
 	@Override
-	public Execution getExecution() {
-		return new UnitTrustExecution();
+	public ExecutionBatch getExecution() {
+		return new UnitTrustExecutionBatch();
+	}
+
+	@Override
+	public String getFilenameAcc() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFilenameSubAcc() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFilenameAccount() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFilenameSubAccount() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AccountBatch getAccount() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SubAccountBatch getSubAccount() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer getBranchId() {
+		return 1;
+	}
+
+
+	@Override
+	public void accToString(BufferedWriter bufferedWriter, AccountBatch account) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void subAccToString(BufferedWriter bufferedWriter, SubAccountBatch subAccount) throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

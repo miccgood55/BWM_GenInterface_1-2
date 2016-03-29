@@ -3,25 +3,30 @@ package com.wmsl.core;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.wealth.bwm.impl.entity.cp.account.SubAccount;
+import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.OutstandingBatch;
+
+import com.wealth.bwm.batch.impl.entity.cp.account.AccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.SubAccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.SubBankAccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.execution.ExecutionBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.execution.FixedIncomeExecutionBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.FixedIncomeOutstandingBatch;
+
 import com.wealth.bwm.impl.entity.cp.account.SubFixedIncomeAccount;
-import com.wealth.bwm.impl.entity.cp.account.execution.Execution;
-import com.wealth.bwm.impl.entity.cp.account.execution.FixedIncomeExecution;
-import com.wealth.bwm.impl.entity.cp.account.outstanding.FixedIncomeOutstanding;
-import com.wealth.bwm.impl.entity.cp.account.outstanding.Outstanding;
 import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.Constants;
 import com.wmsl.dao.impl.SubFixedIncomeAccountDao;
 
 @Component
-public class FixedIncomeCore extends GenBigDataCore {
+public class FixedIncomeCore extends GenBigDataBizCore {
 
 //	private final Logger log = LoggerFactory.getLogger(FixedIncomeCore.class);
  
@@ -33,8 +38,8 @@ public class FixedIncomeCore extends GenBigDataCore {
 	}
 
 	@Override
-	public void subOutstandingToString(BufferedWriter bufferedWriter, Outstanding outstanding) throws IOException {
-		FixedIncomeOutstanding fixOut = (FixedIncomeOutstanding)outstanding;
+	public void subOutstandingToString(BufferedWriter bufferedWriter, OutstandingBatch outstanding) throws IOException {
+		FixedIncomeOutstandingBatch fixOut = (FixedIncomeOutstandingBatch)outstanding;
 		bufferedWriter.write(prepareData(fixOut.getOutstandingId()) + COMMA_STRING);
 		bufferedWriter.write(prepareData(fixOut.getMarketYield()));
 
@@ -43,8 +48,8 @@ public class FixedIncomeCore extends GenBigDataCore {
 	
 
 	@Override
-	public void subExecutionToString(BufferedWriter bufferedWriter, Execution execution) throws IOException {
-		FixedIncomeExecution fixedExe = (FixedIncomeExecution)execution;
+	public void subExecutionToString(BufferedWriter bufferedWriter, ExecutionBatch execution) throws IOException {
+		FixedIncomeExecutionBatch fixedExe = (FixedIncomeExecutionBatch)execution;
 		
 		bufferedWriter.write(prepareData(fixedExe.getExecutionId()) + COMMA_STRING);
 
@@ -61,7 +66,7 @@ public class FixedIncomeCore extends GenBigDataCore {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SubAccount> getSubAccount() throws InfoEntityServiceException, ServerEntityServiceException {
+	public List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException {
 		
 		Integer dataFrom = getDataFrom();
 		Integer dataTo = getDataTo();
@@ -72,8 +77,19 @@ public class FixedIncomeCore extends GenBigDataCore {
 			subFixedIncomeAccounts = subFixedIncomeAccountDao.getObjectList(dataFrom, dataTo , true, false);
 		}
 		
-		List<? extends SubAccount> subAccounts = subFixedIncomeAccounts;
-		return (List<SubAccount>) subAccounts;
+
+		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
+		for (SubFixedIncomeAccount subFixedIncomeAccount : subFixedIncomeAccounts) {
+			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
+			subBankAccountBatch.setSubAccountId(subFixedIncomeAccount.getSubAccountId());
+			subBankAccountBatchs.add(subBankAccountBatch);
+		}
+		
+		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
+		return (List<SubAccountBatch>) subAccounts;
+		
+//		List<? extends SubAccount> subAccounts = subFixedIncomeAccounts;
+//		return (List<SubAccount>) subAccounts;
 	}
 
 	@Override
@@ -97,15 +113,70 @@ public class FixedIncomeCore extends GenBigDataCore {
 	}
 
 	@Override
-	public Outstanding getOutstanding() {
-		FixedIncomeOutstanding fixOut = new FixedIncomeOutstanding();
+	public OutstandingBatch getOutstanding() {
+		FixedIncomeOutstandingBatch fixOut = new FixedIncomeOutstandingBatch();
 		fixOut.setMarketYield(BigDecimal.ONE);
 		return fixOut;
 	}
 
 	@Override
-	public Execution getExecution() {
-		return new FixedIncomeExecution();
+	public ExecutionBatch getExecution() {
+		return new FixedIncomeExecutionBatch();
 	}
+
+	@Override
+	public String getFilenameAcc() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFilenameSubAcc() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFilenameAccount() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFilenameSubAccount() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AccountBatch getAccount() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SubAccountBatch getSubAccount() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer getBranchId() {
+		return 1;
+	}
+
+
+	@Override
+	public void accToString(BufferedWriter bufferedWriter, AccountBatch account) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void subAccToString(BufferedWriter bufferedWriter, SubAccountBatch subAccount) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

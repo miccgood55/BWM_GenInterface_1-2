@@ -61,12 +61,12 @@ public abstract class AYPositionCore extends Core {
 
 			int seq = 0;
 
-			int customerIndex = 0;
-			int instrumentIndex = 0;
+//			int customerIndex = 0;
+//			int instrumentIndex = 0;
 
 			for (int i = 0; i < ayPositionLimit.intValue(); i++) {
-				CustomerInfo customerInfo = customerInfos.get(customerIndex % customerSize);
-				Instrument instrument = instruments.get(instrumentIndex % instrumentSize);
+				CustomerInfo customerInfo = customerInfos.get(i % customerSize);
+				Instrument instrument = instruments.get(i % instrumentSize);
 
 				writeAYPosition(bufferedWriter,
 						setAYPositionValue(getAYPosition(), customerInfo, instrument, seq++));

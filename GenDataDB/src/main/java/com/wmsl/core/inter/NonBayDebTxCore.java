@@ -29,7 +29,7 @@ public class NonBayDebTxCore extends Core {
 	}
 
 	public String getFilename() {
-		return Constants.FILE_NAME_NON_BAY_DEBENTURE_MASTER + CURRENT_DATE_FORMAT;
+		return Constants.FILE_NAME_NON_BAY_DEBENTURE_TX + CURRENT_DATE_FORMAT;
 	}
 
 	public List<CustomerInfo> getCustomers() {
@@ -64,12 +64,9 @@ public class NonBayDebTxCore extends Core {
 
 			long seq = 100000;
 
-			int customerIndex = 0;
-			int instrumentIndex = 0;
-
 			for (int i = 0; i < nonBayDebTxLimit.intValue(); i++) {
-				CustomerInfo customerInfo = customerInfos.get(customerIndex % customerSize);
-				Instrument instrument = instruments.get(instrumentIndex % instrumentSize);
+				CustomerInfo customerInfo = customerInfos.get(i % customerSize);
+				Instrument instrument = instruments.get(i % instrumentSize);
 
 				writeNonBayDebTx(bufferedWriter,
 						setNonBayDebTxValue(new NonBayDebTx(), customerInfo, instrument, String.valueOf(seq++)));
