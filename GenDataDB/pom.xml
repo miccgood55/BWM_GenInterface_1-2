@@ -40,7 +40,7 @@
 		<!-- <version>3.4.0.GA</version> -->
 		<!-- </dependency> -->
 
-
+ 
 		<dependency>
 			<groupId>com.wealth.bwm</groupId>
 			<artifactId>bwm-persistence</artifactId>
