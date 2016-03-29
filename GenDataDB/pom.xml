@@ -17,11 +17,11 @@
 
 	<dependencies>
 
-		<dependency>
-			<groupId>net.kemitix</groupId>
-			<artifactId>sqlite-dialect</artifactId>
-			<version>0.1.0</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>net.kemitix</groupId> -->
+<!-- 			<artifactId>sqlite-dialect</artifactId> -->
+<!-- 			<version>0.1.0</version> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-commons-annotations</artifactId>
