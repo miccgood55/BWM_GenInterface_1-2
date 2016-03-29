@@ -17,6 +17,24 @@ public class CoreDao extends GenericDAOHibernate<Integer, Integer> implements IC
 
 	private static final long serialVersionUID = -6317417784671642751L;
 
+	public Integer getNextAccountId() {
+
+		Session session = this.getSession();
+		Query query = session.createQuery("SELECT MAX(o.accountId) + 1 from Account o ");
+
+		Integer max = (Integer) query.uniqueResult();
+		return max;
+	}
+
+	public Integer getNextSubAccountId() {
+
+		Session session = this.getSession();
+		Query query = session.createQuery("SELECT MAX(o.subAccountId) + 1 from SubAccount o ");
+
+		Integer max = (Integer) query.uniqueResult();
+		return max;
+	}
+	
 	public Integer getNextOutstandingId() {
 
 		Session session = this.getSession();

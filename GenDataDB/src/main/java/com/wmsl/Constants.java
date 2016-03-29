@@ -20,11 +20,18 @@ public class Constants {
 	
 //	public static final String DIR = "C:\\BWM\\Interface\\gen3\\";
 	public static final String DIR = "D:\\tmp\\gen4\\";
+	public static final String DIR_BIG = "D:\\tmp\\genbig\\";
 
-	public static final String DIR_EXECUTION = DIR + "big\\execution\\";
-	public static final String DIR_OUTSTANDING = DIR + "big\\outstanding\\";
-	public static final String DIR_POS = DIR + "big\\position\\";
-	public static final String DIR_TX = DIR + "big\\transaction\\";
+	public static final String DIR_ACCOUNT = DIR_BIG + "account\\";
+	public static final String DIR_SUBACCOUNT = DIR_BIG + "subaccount\\";
+	public static final String DIR_OUTSTANDING = DIR_BIG + "outstanding\\";
+	public static final String DIR_EXECUTION = DIR_BIG + "execution\\";
+	
+
+	public static final String DIR_ACC = DIR_BIG + "acc\\";
+	public static final String DIR_SUBACC = DIR_BIG + "subacc\\";
+	public static final String DIR_POS = DIR_BIG + "position\\";
+	public static final String DIR_TX = DIR_BIG + "transaction\\";
 	
 //	public static final String DIR_OUTSTANDING = DIR + "subaccount\\";
 	
@@ -46,27 +53,69 @@ public class Constants {
 //	public static final String DIR_RM = DIR + "rm\\";
 //	public static final String DIR_RM_MAP_CIF = DIR + "rm-map-cif\\";
 //	public static final String DIR_CIF_MAP_BRANCH = DIR + "cif-map-branch\\";
+
 	
-
+//	===  deposit  === //
+	public static final String FILE_NAME_ACCOUNT_DEPOSIT = "CP_ACCOUNT-deposit";
+	public static final String FILE_NAME_SUBACCOUNT_DEPOSIT = "CP_SUBACCOUNT-deposit";
 	public static final String FILE_NAME_OUTSTANDING_DEPOSIT = "CP_OUTSTANDING-deposit";
-	public static final String FILE_NAME_OUTSTANDING_FIXED = "CP_OUTSTANDING-fixed";
-	public static final String FILE_NAME_OUTSTANDING_UNITTRUST = "CP_OUTSTANDING-unittrust";
-
 	public static final String FILE_NAME_EXECUTION_DEPOSIT = "CP_EXECUTION-deposit";
+
+	public static final String FILE_NAME_DEP_ACC = "CP_BANKACCOUNT";
+	public static final String FILE_NAME_DEP_SUBACC = "CP_SUBBANKACCOUNT";
+	public static final String FILE_NAME_DEP_POS = "CP_DEPOSITOUTSTANDING";
+	public static final String FILE_NAME_DEP_TX = "CP_DEPOSITEXECUTION";
+
+//	===  fixed  === //
+	public static final String FILE_NAME_ACCOUNT_FIXED = "CP_ACCOUNT-fixed";
+	public static final String FILE_NAME_SUBACCOUNT_FIXED = "CP_SUBACCOUNT-fixed";
+	public static final String FILE_NAME_OUTSTANDING_FIXED = "CP_OUTSTANDING-fixed";
 	public static final String FILE_NAME_EXECUTION_FIXED = "CP_EXECUTION-fixed";
+
+	public static final String FILE_NAME_BOND_ACC = "CP_FIXEDINCOMEACCOUNT";
+	public static final String FILE_NAME_BOND_SUBACC = "CP_SUBFIXEDINCOMEACCOUNT";
+	public static final String FILE_NAME_BOND_POS = "CP_FIXEDINCOMEOUTSTANDING";
+	public static final String FILE_NAME_BOND_TX = "CP_FIXEDINCOMEEXECUTION";
+
+//	===  unittrust  === //
+	public static final String FILE_NAME_ACCOUNT_UNITTRUST = "CP_ACCOUNT-unittrust";
+	public static final String FILE_NAME_SUBACCOUNT_UNITTRUST = "CP_SUBACCOUNT-unittrust";
+	public static final String FILE_NAME_OUTSTANDING_UNITTRUST = "CP_OUTSTANDING-unittrust";
 	public static final String FILE_NAME_EXECUTION_UNITTRUST = "CP_EXECUTION-unittrust";
+
+	public static final String FILE_NAME_UT_ACC = "CP_UNITTRUSTACCOUNT";
+	public static final String FILE_NAME_UT_SUBACC = "CP_SUBUNITTRUSTACCOUNT";
+	public static final String FILE_NAME_UT_POS = "CP_UNITTRUSTOUTSTANDING";
+	public static final String FILE_NAME_UT_TX = "CP_UNITTRUSTEXECUTION";
+
+//	===  Margin  === //
+	public static final String FILE_NAME_ACCOUNT_MARGIN = "CP_ACCOUNT-MARGIN";
+	public static final String FILE_NAME_SUBACCOUNT_MARGIN = "CP_SUBACCOUNT-MARGIN";
+	public static final String FILE_NAME_OUTSTANDING_MARGIN = "CP_OUTSTANDING-MARGIN";
+	public static final String FILE_NAME_EXECUTION_MARGIN = "CP_EXECUTION-MARGIN";
+
+	public static final String FILE_NAME_MARGIN_ACC = "CP_MARGINACCOUNT";
+	public static final String FILE_NAME_MARGIN_SUBACC = "CP_SUBMARGINACCOUNT";
+	public static final String FILE_NAME_MARGIN_POS = "CP_MARGINOUTSTANDING";
+//	public static final String FILE_NAME_MARGIN_TX = "CP_MARGINEXECUTION";
+	
+//	===  Liability  === //
+	public static final String FILE_NAME_ACCOUNT_LIAB = "CP_ACCOUNT-LIAB";
+	public static final String FILE_NAME_SUBACCOUNT_LIAB = "CP_SUBACCOUNT-LIAB";
+	public static final String FILE_NAME_OUTSTANDING_LIAB = "CP_OUTSTANDING-LIAB";
+	public static final String FILE_NAME_EXECUTION_LIAB = "CP_EXECUTION-LIAB";
+
+	public static final String FILE_NAME_LIAB_ACC = "CP_CREDITLOANACCOUNT";
+	public static final String FILE_NAME_LIAB_SUBACC = "CP_SUBCREDITLOANACCOUNT";
+	public static final String FILE_NAME_LIAB_POS = "CP_CREDITLOANOUTSTANDING";
+	public static final String FILE_NAME_LIAB_TX = "CP_LIABEXECUTION";
+
 	
 //	public static final String FILE_NAME_CUS = "customer";
 //	public static final String FILE_NAME_DEP_ACC = "deposit-acc";
-	public static final String FILE_NAME_DEP_POS = "CP_DEPOSITOUTSTANDING";
-	public static final String FILE_NAME_DEP_TX = "CP_DEPOSITEXECUTION";
 //	public static final String FILE_NAME_FUNDCODE = "fund-code";
 //	public static final String FILE_NAME_UH = "unittrust";
-	public static final String FILE_NAME_UT_POS = "CP_UNITTRUSTOUTSTANDING-pos";
-	public static final String FILE_NAME_UT_TX = "CP_UNITTRUSTEXECUTION-tx";
 //	public static final String FILE_NAME_BONDMASTER = "bond-master";
-	public static final String FILE_NAME_BOND_POS = "CP_FIXEDINCOMEOUTSTANDING-pos";
-	public static final String FILE_NAME_BOND_TX = "CP_FIXEDINCOMEEXECUTION-tx";
 //	public static final String FILE_NAME_LIABILITY_POS = "liability-pos";
 //	public static final String FILE_NAME_FX = "exchange-rate";
 //	public static final String FILE_NAME_RM_BRANCH = "rmbranch";
@@ -89,7 +138,7 @@ public class Constants {
 	public static final String DIR_NON_BAY_DEBENTURE = DIR + "Non-Bay-Debenture\\";
 	
 	public static final String FILE_NAME_NON_BAY_DEBENTURE_MASTER = "bwm_Deb_NONBAY_mas_wly_";
-	public static final String FILE_NAME_NON_BAY_DEBENTURE_TRANSACTION = "bwm_Deb_NONBAY_trans_wly_";
+	public static final String FILE_NAME_NON_BAY_DEBENTURE_TX = "bwm_Deb_NONBAY_trans_wly_";
 	
 	
 	public static final String DIR_AYCAP = DIR + "AYCap\\";

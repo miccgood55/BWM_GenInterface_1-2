@@ -163,6 +163,8 @@
 		<property name="prefixTx" value="${deposit.prefix_tx}"/>
 		<property name="dataFrom" value="${deposit.subaccount.from}"/>
 		<property name="dataTo" value="${deposit.subaccount.to}"/>
+		<property name="accountLimit" value="${deposit.account.limit}"/>
+		<property name="subAccountLimit" value="${deposit.subaccount.limit}"/>
 		<property name="outstandingLimit" value="${deposit.outstanding.limit}"/>
 		<property name="executionLimit" value="${deposit.execution.limit}"/>
 	</bean>
@@ -190,6 +192,8 @@
 		<property name="prefixTx" value="${fixedincome.prefix_tx}"/>
 		<property name="dataFrom" value="${fixedincome.subaccount.from}"/>
 		<property name="dataTo" value="${fixedincome.subaccount.to}"/>
+		<property name="accountLimit" value="${fixedincome.account.limit}"/>
+		<property name="subAccountLimit" value="${fixedincome.subaccount.limit}"/>
 		<property name="outstandingLimit" value="${fixedincome.outstanding.limit}"/>
 		<property name="executionLimit" value="${fixedincome.execution.limit}"/>
 		
@@ -218,6 +222,8 @@
 		<property name="prefixTx" value="${unitholder.prefix_tx}"/>
 		<property name="dataFrom" value="${unitholder.subaccount.from}"/>
 		<property name="dataTo" value="${unitholder.subaccount.to}"/>
+		<property name="accountLimit" value="${unitholder.account.limit}"/>
+		<property name="subAccountLimit" value="${unitholder.subaccount.limit}"/>
 		<property name="outstandingLimit" value="${unitholder.outstanding.limit}"/>
 		<property name="executionLimit" value="${unitholder.execution.limit}"/>
 	</bean>

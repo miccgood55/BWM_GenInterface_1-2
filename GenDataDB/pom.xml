@@ -50,6 +50,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.wealth.bwm</groupId>
+			<artifactId>bwm-batch-persistence</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<version>3.12.0.GA</version>

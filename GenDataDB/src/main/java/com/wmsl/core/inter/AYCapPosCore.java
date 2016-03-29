@@ -3,6 +3,7 @@ package com.wmsl.core.inter;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -16,10 +17,10 @@ import com.wmsl.Constants;
 @Component
 public class AYCapPosCore extends AYPositionCore {
 
-	private static final BigDecimal BALANCE = new BigDecimal(16733.58);
-	private static final BigDecimal CREDIT_LIMIT = new BigDecimal(30000.00);
-	private static final BigDecimal AVAILABLE_CREDIT_LIMIT = new BigDecimal(13266.42);
-	private static final BigDecimal CURRENT_DUE_AMOUNT = new BigDecimal(16733.58);
+	private static final BigDecimal BALANCE = new BigDecimal(16733.58).setScale(4, RoundingMode.HALF_UP);
+	private static final BigDecimal CREDIT_LIMIT = new BigDecimal(30000.00).setScale(4, RoundingMode.HALF_UP);
+	private static final BigDecimal AVAILABLE_CREDIT_LIMIT = new BigDecimal(13266.42).setScale(4, RoundingMode.HALF_UP);
+	private static final BigDecimal CURRENT_DUE_AMOUNT = new BigDecimal(16733.58).setScale(4, RoundingMode.HALF_UP);
 
 
 	@Override
@@ -89,10 +90,10 @@ public class AYCapPosCore extends AYPositionCore {
 		ayCapPos.setAvailableCreditLimit(AVAILABLE_CREDIT_LIMIT);
 		ayCapPos.setPaymentDueDate(CURRENT_DATE_FORMAT);
 		ayCapPos.setCurrentDueAmount(CURRENT_DUE_AMOUNT);
-		ayCapPos.setAccountName("ACCOUNT_NAME_" + seq);
+		ayCapPos.setAccountName("ACCOUNT_NAME_AYCAP_" + seq);
 		ayCapPos.setIssuerCode("TCS");
 		ayCapPos.setCifCode(customerInfo.getCifCode());
-//		ayCapPos.setMergeCIFCode(mergeCIFCode);
+		ayCapPos.setMergeCIFCode("");
 		ayCapPos.setStartDate(CURRENT_DATE_FORMAT);
 		ayCapPos.setDelinquencyDesc(CURRENT_DATE_FORMAT);
 		ayCapPos.setCloseDate(CURRENT_DATE_FORMAT);

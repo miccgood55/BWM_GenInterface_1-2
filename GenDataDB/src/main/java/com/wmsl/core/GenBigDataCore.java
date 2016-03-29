@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
-import com.wealth.bwm.impl.entity.cp.account.SubAccount;
-import com.wealth.bwm.impl.entity.cp.account.execution.Execution;
-import com.wealth.bwm.impl.entity.cp.account.outstanding.Outstanding;
+import com.wealth.bwm.batch.impl.entity.cp.account.AccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.SubAccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.execution.ExecutionBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.OutstandingBatch;
 import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
-import com.wmsl.Constants;
 import com.wmsl.utils.GenDataDBUtils;
 
 @Component
@@ -29,6 +29,8 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 //	public static final String ENCODING = "UTF-8";
 //	public static final String FILENAME_EXT = ".big";
 
+	private static int ACCOUNT_NEXT_ID;
+	private static int SUBACCOUNT_NEXT_ID;
 	private static int OUTSTANDING_NEXT_ID;
 	private static int EXECUTION_NEXT_ID;
 	private static Integer INSTRUMENT_ID;
@@ -42,6 +44,8 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	private Integer dataFrom;
 	private Integer dataTo;
 
+	private Integer accountLimit;
+	private Integer subAccountLimit;
 	private Integer outstandingLimit;
 	private Integer executionLimit;
 	
@@ -61,16 +65,33 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 //		this.genFilesUtils = genFilesUtils;
 //	}
 
-	public abstract List<SubAccount> getSubAccount() throws InfoEntityServiceException, ServerEntityServiceException;
+	public abstract List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException;
+	public abstract String getFilenameAcc();
+	public abstract String getFilenameSubAcc();
 	public abstract String getFilenamePos();
 	public abstract String getFilenameTx();
 	public abstract String getFilenameExecution();
 	public abstract String getFilenameOutstanding();
-	public abstract Outstanding getOutstanding();
-	public abstract Execution getExecution();
-	public abstract void subOutstandingToString(BufferedWriter bufferedWriter, Outstanding outstanding) throws IOException;
-	public abstract void subExecutionToString(BufferedWriter bufferedWriter, Execution execution) throws IOException;
-	
+	public abstract String getFilenameAccount();
+	public abstract String getFilenameSubAccount();
+	public abstract AccountBatch getAccount();
+	public abstract Integer getBranchId();
+	public abstract SubAccountBatch getSubAccount();
+	public abstract OutstandingBatch getOutstanding();
+	public abstract ExecutionBatch getExecution();
+	public abstract void accToString(BufferedWriter bufferedWriter, AccountBatch account) throws IOException;
+	public abstract void subAccToString(BufferedWriter bufferedWriter, SubAccountBatch subAccount) throws IOException;
+	public abstract void subOutstandingToString(BufferedWriter bufferedWriter, OutstandingBatch outstanding) throws IOException;
+	public abstract void subExecutionToString(BufferedWriter bufferedWriter, ExecutionBatch execution) throws IOException;
+
+	public int getNextAccountId() {
+		return ACCOUNT_NEXT_ID++;
+	}
+
+	public int getNextSubAccountId() {
+		return SUBACCOUNT_NEXT_ID++;
+	}
+
 	public int getNextOutstandingId() {
 		return OUTSTANDING_NEXT_ID++;
 	}
@@ -114,7 +135,18 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	public Integer getDataTo() {
 		return this.dataTo;
 	}
-
+	public Integer getAccountLimit() {
+		return accountLimit;
+	}
+	public void setAccountLimit(Integer accountLimit) {
+		this.accountLimit = accountLimit;
+	}
+	public Integer getSubAccountLimit() {
+		return subAccountLimit;
+	}
+	public void setSubAccountLimit(Integer subAccountLimit) {
+		this.subAccountLimit = subAccountLimit;
+	}
 	public Integer getOutstandingLimit() {
 		return outstandingLimit;
 	}
@@ -149,13 +181,28 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		this.prefixTx = prefixTx;
 	}
 
-	protected String getTxSeq(String prefixTx, long seq){
+	protected String getTxSeq(long seq){
 		return new StringBuilder(prefixTx).append(seq).toString();
 	}
 	
 	@Override
     public void afterPropertiesSet() throws Exception {
 		log.debug(" === PostGenDataCore === ");
+		
+		if(ACCOUNT_NEXT_ID == 0){
+			Integer accountId = coreDao.getNextAccountId();
+			if(accountId != null){
+				ACCOUNT_NEXT_ID = accountId.intValue();
+						log.debug("Account nextId : " + ACCOUNT_NEXT_ID);
+			}
+		}
+		if(SUBACCOUNT_NEXT_ID == 0){
+			Integer subAccountId = coreDao.getNextSubAccountId();
+			if(subAccountId != null){
+				SUBACCOUNT_NEXT_ID = subAccountId.intValue();
+						log.debug("SubAccount nextId : " + SUBACCOUNT_NEXT_ID);
+			}
+		}
 		if(OUTSTANDING_NEXT_ID == 0){
 			Integer outstandingNextId = coreDao.getNextOutstandingId();
 			if(outstandingNextId != null){
@@ -177,134 +224,57 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		}
 	}
 
-	@Override
-	public long execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException{
-		log.debug("Start GenBigDataCore.execute ");
-
-		Calendar startDate = this.getStartDate();
-		Calendar stopDate = this.getStopDate();
+	public void setSubAccountValue(SubAccountBatch subAccount, AccountBatch account, String accountNo) {
 		
-		List<SubAccount> subAccounts = getSubAccount();
-		int countSubAccount = subAccounts.size();
+		subAccount.setSubAccountId(getNextSubAccountId());
+		subAccount.setAccount(account);
+		subAccount.setSubAccountNo(accountNo);
+		subAccount.setCreateDate(CURRENT_DATE_FORMAT);
+		subAccount.setCreateTime("00:00:00");
+		subAccount.setCreateBy(1);
+		subAccount.setCreateByName("BWMADMIN");
+		subAccount.setLastUpdateDate(CURRENT_DATE_FORMAT);
+		subAccount.setLastUpdateTime("00:00:00");
+		subAccount.setLastUpdateBy(1);
+		subAccount.setLastUpdateByName("BWMADMIN");
+		subAccount.setInstrumentId(getInstrumentId());
+		subAccount.setIsActive('Y');
 		
-		log.debug("SubAccount size : " + countSubAccount);
-		if(countSubAccount == 0){
-			return 0;
-		}
+	}
+	
+	public void setAccountValue(AccountBatch account, String accountNumber) {
 		
-		BufferedWriter bufferedWriterPosition = genFilesUtils.getBufferedWriter(
-				Constants.DIR_POS, getFilenamePos(), Constants.FILENAME_BIG_EXT);
-
-		BufferedWriter bufferedWriterTx = genFilesUtils.getBufferedWriter(
-				Constants.DIR_TX, getFilenameTx(), Constants.FILENAME_BIG_EXT);
-
-		BufferedWriter bufferedWriterOutStanding = genFilesUtils.getBufferedWriter(
-				Constants.DIR_OUTSTANDING, getFilenameOutstanding(), Constants.FILENAME_BIG_EXT);
-
-		BufferedWriter bufferedWriterExe = genFilesUtils.getBufferedWriter(
-				Constants.DIR_EXECUTION, getFilenameExecution(), Constants.FILENAME_BIG_EXT);
-		
-		long countRecord = 0;
-		try {
-
-			long seq = 1000000;
-			int lastMonth = -1;
-			
-			
-//			executionLimit 
-			int totalDay = stopDate.get(Calendar.DAY_OF_YEAR);
-			int executionLimitPerDay = ( executionLimit == null ? countSubAccount +1 : Math.round(executionLimit / totalDay));
-			int outstandingLimitPerDay = ( outstandingLimit == null ? countSubAccount +1 : Math.round(outstandingLimit / totalDay));
-			
-			for (int i = 0; i < totalDay; i++) {
-
-				String dateFormat = sdf.format(startDate.getTime());
-				
-				int currentMonth = startDate.get(Calendar.MONTH);
-				if(currentMonth != lastMonth){
-					log.debug("Date : " + dateFormat);
-					lastMonth = currentMonth;
-				}
-				int executionCount = 0;
-				int outstandingCount = 0;
-				for (SubAccount subAccount : subAccounts) {
-
-					boolean isOutstandingSuccess = false;
-					boolean isExecutionSuccess = false;
-					
-//					Position
-					Outstanding outstanding = getOutstanding();
-					setOutstandingValue(outstanding, dateFormat, subAccount);
-					
-//					Transection
-					Execution execution = getExecution();
-					setExecutionValue(execution, dateFormat, subAccount, getTxSeq(prefixTx, seq++));
-
-					
-					if(outstandingCount < outstandingLimitPerDay){
-						outstandingToString(bufferedWriterOutStanding, outstanding);
-						subOutstandingToString(bufferedWriterPosition, outstanding);
-						
-						outstandingCount++;
-					} else {
-						isOutstandingSuccess = true;
-					}
-					
-					
-					if(executionCount < executionLimitPerDay){
-						executionToString(bufferedWriterExe, execution);
-						subExecutionToString(bufferedWriterTx, execution);
-						
-//						CP_DEPOSITEXECUTION
-						executionCount++;
-					} else {
-						isExecutionSuccess = true;
-					}
-					
-					countRecord++;
-					
-					if(isOutstandingSuccess && isExecutionSuccess){
-						break;
-					}
-				}
-				startDate.add(Calendar.DATE, 1);
-
-			}
-			
-		} catch (IOException e) {
-			throw new IOException();
-		} finally {
-			bufferedWriterOutStanding.flush();
-			bufferedWriterOutStanding.close();
-
-			bufferedWriterExe.flush();
-			bufferedWriterExe.close();
-			
-			bufferedWriterPosition.flush();
-			bufferedWriterPosition.close();
-
-			bufferedWriterTx.flush();
-			bufferedWriterTx.close();
-		}
-		
-		return countRecord;
+		account.setAccountId(getNextAccountId());
+		account.setAccountNumber(accountNumber);
+		account.setAccountName("NAME_" + accountNumber);
+		account.setCreateDate(CURRENT_DATE_FORMAT);
+		account.setCreateTime("00:00:00");
+		account.setCreateBy(1);
+		account.setCreateByName("BWMADMIN");
+		account.setLastUpdateDate(CURRENT_DATE_FORMAT);
+		account.setLastUpdateTime("00:00:00");
+		account.setLastUpdateBy(1);
+		account.setLastUpdateByName("BWMADMIN");
+		account.setBranchId(getBranchId());
+		account.setSource("BAY-CA");
+		account.setAccountNameOther("NAME_" + accountNumber);
+	}
+	
+	public void setOutstandingValue(OutstandingBatch outstanding, String dateFormat, SubAccountBatch subAccount) {
+		outstanding.setOutstandingId(getNextOutstandingId());
+		outstanding.setOutstandingDate(dateFormat);
+		outstanding.setUnit(BigDecimal.ONE);
+		outstanding.setMarketValue(BigDecimal.ONE);
+		outstanding.setLocalMarketValue(BigDecimal.ONE);
+		outstanding.setLastUpdateDate(dateFormat);
+		outstanding.setLastUpdateTime("00:00:00");
+		outstanding.setLastUpdateBy(1);
+		outstanding.setLastUpdateByName("BWMADMIN");
+		outstanding.setAccountSubType("INVEST");
+		outstanding.setSubAccountId(subAccount.getSubAccountId());
 	}
 
-	public void setOutstandingValue(Outstanding outStand, String dateFormat, SubAccount subAccount) {
-		outStand.setOutstandingId(getNextOutstandingId());
-		outStand.setOutstandingDate(dateFormat);
-		outStand.setUnit(BigDecimal.ONE);
-		outStand.setMarketValue(BigDecimal.ONE);
-		outStand.setLocalMarketValue(BigDecimal.ONE);
-		outStand.setLastUpdateDate(dateFormat);
-		outStand.setLastUpdateTime("00:00:00");
-		outStand.setLastUpdateBy(1);
-		outStand.setLastUpdateByName("BWMADMIN");
-		outStand.setAccountSubType("INVEST");
-		outStand.setSubAccount(subAccount);
-	}
-
-	public void setExecutionValue(Execution execution, String dateFormat, SubAccount subAccount, String externalTxNo) {
+	public void setExecutionValue(ExecutionBatch execution, String dateFormat, SubAccountBatch subAccount, String externalTxNo) {
 
 		execution.setExecutionId(getNextExecutionId());
 		execution.setExecuteDate(dateFormat);
@@ -326,7 +296,7 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		// String.format("%07d", 1)
 
 		execution.setExternalTxNo(externalTxNo);
-		execution.setSubAccount(subAccount);
+		execution.setSubAccountId(subAccount.getSubAccountId());
 
 		execution.setLocalCostAmount(BigDecimal.ONE);
 		execution.setCreateDate(dateFormat);
@@ -338,7 +308,69 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		execution.setSubAccountNo("-");
 	}
 
-	public void outstandingToString(BufferedWriter bufferedWriter, Outstanding outstanding) throws IOException {
+	
+
+	public void subAccountToString(BufferedWriter bufferedWriter, SubAccountBatch subAccount) throws IOException {
+		bufferedWriter.write(prepareData(subAccount.getSubAccountId()));bufferedWriter.write(COMMA_STRING);
+		bufferedWriter.write(prepareData(subAccount.getAccount()));bufferedWriter.write(COMMA_STRING);
+		bufferedWriter.write(prepareData(subAccount.getSubAccountNo()));bufferedWriter.write(COMMA_STRING);
+		
+
+		bufferedWriter.write(prepareData(subAccount.getCreateDate()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(subAccount.getCreateTime()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(subAccount.getCreateBy()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(subAccount.getCreateByName()) + COMMA_STRING);
+
+		bufferedWriter.write(prepareData(subAccount.getLastUpdateDate()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(subAccount.getLastUpdateTime()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(subAccount.getLastUpdateBy()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(subAccount.getLastUpdateByName()) + COMMA_STRING);
+		
+		bufferedWriter.write(prepareData(subAccount.getInstrumentId()));bufferedWriter.write(COMMA_STRING);
+//		bufferedWriter.write(prepareData(subAccount.getRemark()));bufferedWriter.write(COMMA_STRING);
+//		bufferedWriter.write(prepareData(subAccount.getIssueDate()));bufferedWriter.write(COMMA_STRING);
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
+		bufferedWriter.write(prepareData(subAccount.getIsActive()));bufferedWriter.write(COMMA_STRING);
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING + 'N');
+	
+	}
+	
+	
+	public void accountToString(BufferedWriter bufferedWriter, AccountBatch account) throws IOException {
+		
+//		ACCOUNTID *	ACCOUNTNUMBER	ACCOUNTNAME	
+//		CREATEDATE	CREATETIME	CREATEBY	CREATEBYNAME	
+//		LASTUPDATEDATE	LASTUPDATETIME	LASTUPDATEBY	LASTUPDATEBYNAME	
+//		BRANCHID	SOURCE	ACCOUNTNAMEOTHER
+
+		
+		bufferedWriter.write(prepareData(account.getAccountId()));bufferedWriter.write(COMMA_STRING);
+		bufferedWriter.write(prepareData(account.getAccountNumber()));bufferedWriter.write(COMMA_STRING);
+		bufferedWriter.write(prepareData(account.getAccountName()));bufferedWriter.write(COMMA_STRING);
+
+		bufferedWriter.write(prepareData(account.getCreateDate()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(account.getCreateTime()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(account.getCreateBy()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(account.getCreateByName()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(account.getLastUpdateDate()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(account.getLastUpdateTime()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(account.getLastUpdateBy()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(account.getLastUpdateByName()) + COMMA_STRING);
+
+//		INSTRUMENTID	OPENDATE	CLOSEDATE	PORTFOLIOID	INTERNALTYPEID	
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING);
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
+
+		bufferedWriter.write(prepareData(account.getBranchId()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(account.getSource()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(account.getAccountNameOther()));bufferedWriter.write(COMMA_STRING);
+
+//		ISPRIVATEFUND	REFERENCEPRIVATEFUND
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING);
+	
+	}
+	
+	public void outstandingToString(BufferedWriter bufferedWriter, OutstandingBatch outstanding) throws IOException {
 
 		// List<String> list = new ArrayList<String>();
 
@@ -397,7 +429,7 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
 		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
 		
-		bufferedWriter.write(prepareData(outstanding.getSubAccount()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(outstanding.getSubAccountId()) + COMMA_STRING);
 		
 //		bufferedWriter.write(prepareData(outstanding.getMarketExchangeDate()) + COMMA_STRING);
 //		bufferedWriter.write(prepareData(outstanding.getAccruedInterestExchangeDate()) + COMMA_STRING);
@@ -428,7 +460,7 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 
 	}
 
-	public void executionToString(BufferedWriter bufferedWriter, Execution execution) throws IOException {
+	public void executionToString(BufferedWriter bufferedWriter, ExecutionBatch execution) throws IOException {
 
 		// 367020,,"20160302",,"1",,10.00,810.00,,,"20160302","11:59:16",1,"BWMAdmin",,,,,,,"A","20160302",81.00,,,,,"20160302",,
 		// 0.00,,660,,,,,,,"BOND_TX_NO_00000001",68128,,"6",,,,"20160302","11:59:16",1,"BWMAdmin",,,,,,,,,,,,,,,,,,,,,"BAY-DEBENTURE","-","-"
@@ -523,7 +555,7 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
 
 		bufferedWriter.write(prepareData(execution.getExternalTxNo()) + COMMA_STRING);
-		bufferedWriter.write(prepareData(execution.getSubAccount()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(execution.getSubAccountId()) + COMMA_STRING);
 		// bufferedWriter.write(prepareData(depExe.getExternalId()) +
 		// COMMA_STRING);
 		// bufferedWriter.write(prepareData(depExe.getSUBTRANSACTIONTYPE) +
@@ -600,13 +632,6 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 //		return val.getCurrencyId().toString();
 //	}
 
-	private String prepareData(SubAccount val) {
-		if (val == null) {
-			return "";
-		}
-		return val.getSubAccountId().toString();
-	}
-
 	protected String prepareData(String val) {
 		if (val == null) {
 			return "";
@@ -633,6 +658,13 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 			return "";
 		}
 		return val.toString();
+	}
+
+	private String prepareData(AccountBatch account) {
+		if (account == null) {
+			return "";
+		}
+		return account.getAccountId().toString();
 	}
 
 }
