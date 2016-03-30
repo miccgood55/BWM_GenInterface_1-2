@@ -139,7 +139,63 @@
 	
 	</bean>
 
+
+
+
 	<!-- big -->
+	
+	<bean id="summaryAccCore" scope="prototype" class="com.wmsl.core.SummaryAccCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		
+		<property name="startYear" value="${summaryacc.start.year}"/>
+		<property name="startMonth" value="${summaryacc.start.month}"/>
+		<property name="startDay" value="${summaryacc.start.day}"/>
+		
+		<property name="stopYear" value="${summaryacc.stop.year}"/>
+		<property name="stopMonth" value="${summaryacc.stop.month}"/>
+		<property name="stopDay" value="${summaryacc.stop.day}"/>
+		
+		<property name="instrumentCode" value="${summaryacc.instrumentcode}"/>
+		<property name="prefixTx" value="${summaryacc.prefix_tx}"/>
+		<property name="dataFrom" value="${summaryacc.subaccount.from}"/>
+		<property name="dataTo" value="${summaryacc.subaccount.to}"/>
+		<property name="accountLimit" value="${summaryacc.account.limit}"/>
+		<property name="subAccountLimit" value="${summaryacc.subaccount.limit}"/>
+		<property name="outstandingLimit" value="${summaryacc.outstanding.limit}"/>
+		<property name="executionLimit" value="${summaryacc.execution.limit}"/>
+	</bean>
+	
+	
+	<bean id="summaryDeriCore" scope="prototype" class="com.wmsl.core.SummaryDeriCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		
+		<property name="startYear" value="${summaryderi.start.year}"/>
+		<property name="startMonth" value="${summaryderi.start.month}"/>
+		<property name="startDay" value="${summaryderi.start.day}"/>
+		
+		<property name="stopYear" value="${summaryderi.stop.year}"/>
+		<property name="stopMonth" value="${summaryderi.stop.month}"/>
+		<property name="stopDay" value="${summaryderi.stop.day}"/>
+		
+		<property name="instrumentCode" value="${summaryderi.instrumentcode}"/>
+		<property name="prefixTx" value="${summaryderi.prefix_tx}"/>
+		<property name="dataFrom" value="${summaryderi.subaccount.from}"/>
+		<property name="dataTo" value="${summaryderi.subaccount.to}"/>
+		<property name="accountLimit" value="${summaryderi.account.limit}"/>
+		<property name="subAccountLimit" value="${summaryderi.subaccount.limit}"/>
+		<property name="outstandingLimit" value="${summaryderi.outstanding.limit}"/>
+		<property name="executionLimit" value="${summaryderi.execution.limit}"/>
+	</bean>
 	
 	<bean id="nonBayDebCore" scope="prototype" class="com.wmsl.core.NonBayDebCore">
 		<property name="coreDao">

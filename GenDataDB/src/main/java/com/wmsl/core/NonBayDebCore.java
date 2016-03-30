@@ -210,7 +210,7 @@ public class NonBayDebCore extends GenBigDataInstrumentsCore{
 	 */
 	@Override
 	public String getDir(String dir) {
-		return Constants.DIR_MARG + dir;
+		return Constants.DIR_MARGIN + dir;
 	}
 	@Override
 	public String getFilenameAcc() {
@@ -234,7 +234,7 @@ public class NonBayDebCore extends GenBigDataInstrumentsCore{
 	
 	@Override
 	public String getFilenameAccount() {
-		return Constants.FILE_NAME_ACCOUNT_DEPOSIT + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_ACCOUNT_MARGIN + getStopDate().get(Calendar.YEAR);
 	}
 
 	@Override

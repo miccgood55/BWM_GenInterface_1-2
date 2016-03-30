@@ -224,7 +224,7 @@ public class SummaryDeriCore extends GenBigDataBizCore {
 	
 	@Override
 	public String getDir(String dir) {
-		return Constants.DIR_SUM_DERI + dir;
+		return Constants.DIR_MARGIN_SUM_DERI + dir;
 	}
 	@Override
 	public String getFilenameAcc() {

@@ -7,6 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.wealth.bwm.batch.impl.entity.cp.account.AccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.MarginAccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.SubAccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.SubMarginAccountBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.execution.ExecutionBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.MarginOutstandingBatch;
+import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.OutstandingBatch;
 import com.wealth.bwm.common.impl.entity.instrument.Instrument;
 import com.wmsl.Constants;
 
@@ -40,8 +47,5 @@ public abstract class GenBigDataInstrumentsCore extends GenBigDataBizCore {
 		log.debug(instrumentCode + " : " + instrumentList.size() + " Rows");
 		
 	}
-	
-
-	
 	
 }

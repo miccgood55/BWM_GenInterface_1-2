@@ -17,7 +17,8 @@ public class Constants {
 	public static final String SOURCE_SUMMARY_ACC = "KSS-Equity";
 	public static final String SOURCE_SUMMARY_DERI = "KSS-Derivative";
 	public static final String SOURCE_NONBAY_DEB = "NONBAY-DEBENTURE";
-	
+	public static final String SOURCE_AYCAP = "AYCAP";
+	public static final String SOURCE_AYCAL = "AYCAL";	
 	
 	
 
@@ -92,9 +93,9 @@ public class Constants {
 	public static final String FILE_NAME_UT_TX = "CP_UNITTRUSTEXECUTION";
 
 //	===  Margin  === //
-	public static final String DIR_MARG = DIR_BIG + "margin" + PATH_DELI;
-	public static final String DIR_SUM_ACC = DIR_BIG + "summary-account" + PATH_DELI;
-	public static final String DIR_SUM_DERI = DIR_BIG + "summary-Derivative" + PATH_DELI;
+//	public static final String DIR_MARG = DIR_BIG + "margin" + PATH_DELI;
+	public static final String DIR_MARGIN_SUM_ACC = DIR_BIG + "summary-account" + PATH_DELI;
+	public static final String DIR_MARGIN_SUM_DERI = DIR_BIG + "summary-Derivative" + PATH_DELI;
 	
 	public static final String FILE_NAME_ACCOUNT_MARGIN = "CP_ACCOUNT-MARGIN";
 	public static final String FILE_NAME_SUBACCOUNT_MARGIN = "CP_SUBACCOUNT-MARGIN";
@@ -107,7 +108,9 @@ public class Constants {
 	public static final String FILE_NAME_MARGIN_TX = "CP_MARGINEXECUTION";
 
 //	===  Liability  === //
-	public static final String DIR_LIAB = DIR_BIG + "liability" + PATH_DELI;
+//	public static final String DIR_LIAB = DIR_BIG + "liability" + PATH_DELI;
+	public static final String DIR_LIAB_AYCAP = DIR_BIG + "aycap" + PATH_DELI;
+	public static final String DIR_LIAB_AYCAL = DIR_BIG + "aycal" + PATH_DELI;
 	public static final String FILE_NAME_ACCOUNT_LIAB = "CP_ACCOUNT-LIAB";
 	public static final String FILE_NAME_SUBACCOUNT_LIAB = "CP_SUBACCOUNT-LIAB";
 	public static final String FILE_NAME_OUTSTANDING_LIAB = "CP_OUTSTANDING-LIAB";
