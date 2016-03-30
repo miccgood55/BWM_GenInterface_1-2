@@ -24,13 +24,15 @@ import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.Constants;
 
 @Component
-public class NonBayDebCore extends GenBigDataInstrumentsCore{
+public class SummaryAccCore extends GenBigDataBizCore {
 
 	private static final BigDecimal APTRADE = new BigDecimal(31436.83).setScale(4, RoundingMode.HALF_UP);
 	private static final BigDecimal ARTRADE = BigDecimal.ZERO.setScale(4, RoundingMode.HALF_UP);
 	private static final BigDecimal CASHBALANCE = new BigDecimal(10.64).setScale(4, RoundingMode.HALF_UP);
-	
-	
+
+	public final static BigDecimal COSTVALUE = new BigDecimal(262678.58).setScale(4, RoundingMode.HALF_UP);
+	public final static BigDecimal MARKETVALUE = new BigDecimal(220560.26).setScale(4, RoundingMode.HALF_UP);
+	public final static BigDecimal UNREALIZEDGL = new BigDecimal(-42118.32).setScale(4, RoundingMode.HALF_UP);
 
 	/*
 	 * override to modifile
@@ -39,75 +41,32 @@ public class NonBayDebCore extends GenBigDataInstrumentsCore{
 	 */
 	@Override
 	public String getAccountNumber(String cifCode, int accountIndex) {
-		return "-";
+		return getAccountNumber(Constants.PREFIX_EQ, cifCode, accountIndex);
 	}
 
 	@Override
 	public void setAccountValue(AccountBatch account, String startDateFormat, String accountNumber) {
 		super.setAccountValue(account, startDateFormat, accountNumber);
-
-		account.setAccountNumber("-");
-		account.setAccountName("-");
-
-		account.setCreateBy(2);
-		account.setCreateByName("System");
-		account.setLastUpdateBy(2);
-		account.setLastUpdateByName("System");
-		
-		account.setSource(Constants.SOURCE_NONBAY_DEB);
+		account.setSource(Constants.SOURCE_SUMMARY_ACC);
 	}
 
 	public void setSubAccountValue(SubAccountBatch subAccount, String startDateFormat, AccountBatch account, String accountNo) {
 		super.setSubAccountValue(subAccount, startDateFormat, account, accountNo);
-		subAccount.setSubAccountNo("-");
-
-		subAccount.setCreateBy(2);
-		subAccount.setCreateByName("System");
-		subAccount.setLastUpdateBy(2);
-		subAccount.setLastUpdateByName("System");
-		
-//		subAccount.setIssueDate(startDateFormat);
-//		subAccount.setMatureDate(startDateFormat);
-//		subAccount.setCloseDate(startDateFormat);
+		subAccount.setIssueDate(startDateFormat);
+		subAccount.setMatureDate(startDateFormat);
+		subAccount.setCloseDate(startDateFormat);
 	}
 
 	
+	
 	@Override
-	public void setExecutionValue(ExecutionBatch execution, String dateFormat, SubAccountBatch subAccount, String externalTxNo) {
-		super.setExecutionValue(execution, dateFormat, subAccount, externalTxNo);
-		
-//		execution.setExecutionId(getNextExecutionId());
-//		execution.setExecuteDate(dateFormat);
-//		execution.setTransactionType("1");
-		execution.setUnit(BigDecimal.ZERO);
-		execution.setAmount(BigDecimal.ZERO);
-//		execution.setLastUpdateDate(dateFormat);
-//		execution.setLastUpdateTime("00:00:00");
-		execution.setLastUpdateBy(2);
-		execution.setLastUpdateByName("System");
-		execution.setStatus("A");
-		execution.setSettlementDate(dateFormat);
-		execution.setCostPerUnit(BigDecimal.ZERO);
-		execution.setTradeDate(dateFormat);
-		execution.setNetAmount(BigDecimal.ZERO);
-		execution.setInstrumentId(getInstrumentId());
+	public void setOutstandingValue(OutstandingBatch outstanding, String dateFormat, SubAccountBatch subAccount) {
+		super.setOutstandingValue(outstanding, dateFormat, subAccount);
+		outstanding.setCostValue(COSTVALUE);
+		outstanding.setMarketValue(MARKETVALUE);
+		outstanding.setAccountSubType("INVEST");
+		outstanding.setUnrealizedGL(UNREALIZEDGL);
 
-		// String seqStr = StringUtils.leftPad(String.valueOf(seq++), 7, "0");
-		// String.format("%07d", 1)
-
-		execution.setExternalTxNo(externalTxNo);
-		execution.setSubAccountId(subAccount.getSubAccountId());
-
-		execution.setSubtransactiontype("8");
-		
-		execution.setLocalCostAmount(null);
-//		execution.setCreateDate(dateFormat);
-//		execution.setCreateTime("00:00:00");
-		execution.setCreateBy(2);
-		execution.setCreateByName("System");
-		execution.setSource(Constants.SOURCE_NONBAY_DEB);
-		execution.setAccountNo("-");
-		execution.setSubAccountNo("-");
 	}
 
 	/*
@@ -168,13 +127,13 @@ public class NonBayDebCore extends GenBigDataInstrumentsCore{
 		throw new UnsupportedOperationException();
 	}
 
-	
-	
-	/*
-	 * Get Object Account
+	/* Get Object Account
+	 * 
 	 * (non-Javadoc)
 	 * @see com.wmsl.core.GenBigDataCore#getAccount()
+	 * 
 	 */
+	
 	@Override
 	public AccountBatch getAccount() {
 		MarginAccountBatch marginAccount = new MarginAccountBatch();
@@ -200,17 +159,15 @@ public class NonBayDebCore extends GenBigDataInstrumentsCore{
 		throw new UnsupportedOperationException();
 	}
 
-
-	/*
-	 * get Dir
+	/* Get Dir
 	 * (non-Javadoc)
-	 * @see com.wmsl.core.GenBigDataCore#getDir(java.lang.String)
-	 * 
+	 * @see com.wmsl.core.GenBigDataCore#getDir()
 	 * 
 	 */
+	
 	@Override
 	public String getDir(String dir) {
-		return Constants.DIR_MARG + dir;
+		return Constants.DIR_SUM_ACC + dir;
 	}
 	@Override
 	public String getFilenameAcc() {
@@ -277,5 +234,5 @@ public class NonBayDebCore extends GenBigDataInstrumentsCore{
 //		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
 //		return (List<SubAccountBatch>) subAccounts;
 	}
-	
+
 }

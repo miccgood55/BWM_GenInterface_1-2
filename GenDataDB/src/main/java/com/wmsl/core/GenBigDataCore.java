@@ -180,6 +180,11 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	public void setInstrumentCode(String instrumentCode) {
 		this.instrumentCode = instrumentCode;
 	}
+
+	public String getInstrumentCode() {
+		return this.instrumentCode;
+	}
+	
 	
 	private String prefixTx;
 	public void setPrefixTx(String prefixTx) {
@@ -246,6 +251,14 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		subAccount.setIsActive('Y');
 		
 	}
+
+	public String getAccountNumber(String cifCode, int accountIndex) {
+		return getAccountNumber("ACC_", cifCode, accountIndex);
+	}
+	
+	public String getAccountNumber(String prefix, String cifCode, int accountIndex) {
+		return new StringBuilder(prefix).append(cifCode).append("_").append(String.format("%02d", accountIndex)).toString();
+	}
 	
 	public void setAccountValue(AccountBatch account, String startDateFormat, String accountNumber) {
 		
@@ -277,6 +290,7 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		outstanding.setLastUpdateByName("BWMADMIN");
 		outstanding.setAccountSubType("INVEST");
 		outstanding.setSubAccountId(subAccount.getSubAccountId());
+		
 	}
 
 	public void setExecutionValue(ExecutionBatch execution, String dateFormat, SubAccountBatch subAccount, String externalTxNo) {
@@ -296,9 +310,6 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		execution.setTradeDate(dateFormat);
 		execution.setNetAmount(BigDecimal.ONE);
 		execution.setInstrumentId(getInstrumentId());
-
-		// String seqStr = StringUtils.leftPad(String.valueOf(seq++), 7, "0");
-		// String.format("%07d", 1)
 
 		execution.setExternalTxNo(externalTxNo);
 		execution.setSubAccountId(subAccount.getSubAccountId());

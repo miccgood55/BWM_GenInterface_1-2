@@ -77,6 +77,9 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 			log.debug("OutstandingLimit : " + getOutstandingLimit() + " Rows ");
 			log.debug("ExecutionLimit : " + getExecutionLimit() + " Rows ");
 
+			log.debug(" --------------------------------- ");
+			
+
 			int accountPerAcc = getDiv(getAccountLimit(), customerList.size());
 			int subAccPerAcc = getDiv(getSubAccountLimit(), getAccountLimit());
 			int outstandingPerSubAcc = getDiv(getOutstandingLimit(), getSubAccountLimit());
@@ -86,7 +89,8 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 			log.debug("subAccPerAcc : " + subAccPerAcc);
 			log.debug("outstandingPerSubAcc : " + outstandingPerSubAcc);
 			log.debug("executionPerSubAcc : " + executionPerSubAcc);
-			
+
+			log.debug(" --------------------------------- ");
 
 			String startDateFormat = sdf.format(startDate.getTime());
 			Random random = new Random();
@@ -97,14 +101,17 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 				// Account
 				for (int accountIndex = 0; accountIndex < accountPerAcc; accountIndex++) {
 
-					String accNo = "ACC_" + cifCode + "_" + String.format("%02d", accountIndex);
+					String accNo = getAccountNumber(cifCode, accountIndex);
 
+//					Create Obj Account
 					AccountBatch account = getAccount();
 					setAccountValue(account, startDateFormat, accNo);
 
+//					Write Account To File
 					accountToString(bufferedWriterAccount, account);
 					accToString(bufferedWriterAcc, account);
 
+//					Count Account
 					genResult.addAccountCount();
 					// SubAccount
 					for (int subAccountIndex = 0; subAccountIndex < subAccPerAcc; subAccountIndex++) {

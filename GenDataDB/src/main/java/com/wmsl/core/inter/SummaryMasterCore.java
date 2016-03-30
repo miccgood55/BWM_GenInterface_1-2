@@ -17,7 +17,7 @@ import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.Constants;
 
 @Component
-public class SummaryMasterCore  extends Core{
+public class SummaryMasterCore extends Core {
 
 	private final Logger log = LoggerFactory.getLogger(SummaryMasterCore.class);
 
@@ -41,20 +41,18 @@ public class SummaryMasterCore  extends Core{
 		long countRecord = 0;
 		List<CustomerInfo> customerInfos = getCustomers();
 
-		if(customerInfos.size() <= 0 ){
+		if (customerInfos.size() <= 0) {
 			return new GenResult().setTotalCount(countRecord);
 		}
-		
-		BufferedWriter bufferedWriterEq = genFilesUtils.getBufferedWriter(Constants.DIR_MARGIN, getFilenameEq(),
-				Constants.FILENAME_TXT_EXT);
+
+		BufferedWriter bufferedWriterEq = genFilesUtils.getBufferedWriter(Constants.DIR_MARGIN, getFilenameEq(), Constants.FILENAME_TXT_EXT);
 
 		genFilesUtils.writeHeaderFile(bufferedWriterEq, CURRENT_DATE_FORMAT, customerInfos.size());
-		
-		BufferedWriter bufferedWriterDeri = genFilesUtils.getBufferedWriter(Constants.DIR_MARGIN, getFilenameDeri(),
-				Constants.FILENAME_TXT_EXT);
+
+		BufferedWriter bufferedWriterDeri = genFilesUtils.getBufferedWriter(Constants.DIR_MARGIN, getFilenameDeri(), Constants.FILENAME_TXT_EXT);
 
 		genFilesUtils.writeHeaderFile(bufferedWriterDeri, CURRENT_DATE_FORMAT, customerInfos.size());
-		
+
 		try {
 
 			for (CustomerInfo customerInfo : customerInfos) {
@@ -64,10 +62,10 @@ public class SummaryMasterCore  extends Core{
 				String accountNoDT = Constants.PREFIX_DERI + cifCode + "_" + String.format("%02d", 1);
 
 				writeSummaryMaster(bufferedWriterEq,
-						setSummaryMasterValue(new SummaryMaster(), customerInfo, "KSS-Equity", accountNoEQ));
-				
+						setSummaryMasterValue(new SummaryMaster(), customerInfo, Constants.SOURCE_SUMMARY_ACC, accountNoEQ));
+
 				writeSummaryMaster(bufferedWriterDeri,
-						setSummaryMasterValue(new SummaryMaster(), customerInfo, "KSS-Derivative", accountNoDT));
+						setSummaryMasterValue(new SummaryMaster(), customerInfo, Constants.SOURCE_SUMMARY_DERI, accountNoDT));
 
 				countRecord++;
 			}
@@ -77,7 +75,7 @@ public class SummaryMasterCore  extends Core{
 		} finally {
 			bufferedWriterEq.flush();
 			bufferedWriterEq.close();
-			
+
 			bufferedWriterDeri.flush();
 			bufferedWriterDeri.close();
 		}
@@ -107,8 +105,7 @@ public class SummaryMasterCore  extends Core{
 
 	}
 
-	public SummaryMaster setSummaryMasterValue(SummaryMaster summaryMaster, CustomerInfo customerInfo, String source,
-			String accountNo) {
+	public SummaryMaster setSummaryMasterValue(SummaryMaster summaryMaster, CustomerInfo customerInfo, String source, String accountNo) {
 		summaryMaster.setSource(source);
 		summaryMaster.setAccountName(customerInfo.getFirstNameEn());
 		summaryMaster.setAccountNo(accountNo);
