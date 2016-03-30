@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.wmsl.bean.GenResult;
 import com.wmsl.bean.NonBayDebTx;
 import com.wmsl.bean.dao.CustomerInfo;
 import com.wmsl.core.Core;
@@ -41,7 +42,7 @@ public class NonBayDebTxCore extends Core {
 	}
 
 	@Override
-	public long execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
+	public GenResult execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
 		log.debug("Start NonBayDebTxCore.execute ");
 
 		long countRecord = 0;
@@ -52,7 +53,7 @@ public class NonBayDebTxCore extends Core {
 		int instrumentSize = instruments.size();
 		
 		if(customerSize <= 0 || instrumentSize <= 0){
-			return countRecord;
+			return new GenResult().setTotalCount(countRecord);
 		}
 		
 		BufferedWriter bufferedWriter = genFilesUtils.getBufferedWriter(Constants.DIR_NON_BAY_DEBENTURE,
@@ -81,7 +82,7 @@ public class NonBayDebTxCore extends Core {
 			bufferedWriter.close();
 		}
 
-		return countRecord;
+		return new GenResult().setTotalCount(countRecord);
 	}
 
 	public void writeNonBayDebTx(BufferedWriter bufferedWriter, NonBayDebTx nonBayDebTx) throws IOException {

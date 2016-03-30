@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.wmsl.bean.AYPosition;
+import com.wmsl.bean.GenResult;
 import com.wmsl.bean.dao.CustomerInfo;
 import com.wmsl.core.Core;
 import com.wealth.bwm.common.impl.entity.instrument.Instrument;
@@ -39,7 +40,7 @@ public abstract class AYPositionCore extends Core {
 	public abstract List<Instrument> getInstruments();
 
 	@Override
-	public long execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
+	public GenResult execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
 		log.debug("Start AYPositionCore.execute ");
 
 		long countRecord = 0;
@@ -50,7 +51,7 @@ public abstract class AYPositionCore extends Core {
 		int instrumentSize = instruments.size();
 
 		if (customerSize <= 0 || instrumentSize <= 0) {
-			return countRecord;
+			return new GenResult().setTotalCount(countRecord);
 		}
 
 		BufferedWriter bufferedWriter = genFilesUtils.getBufferedWriter(getDir(), getFilename(),
@@ -80,7 +81,7 @@ public abstract class AYPositionCore extends Core {
 			bufferedWriter.flush();
 			bufferedWriter.close();
 		}
-		return countRecord;
+		return new GenResult().setTotalCount(countRecord);
 	}
 
 	public abstract void writeAYPosition(BufferedWriter bufferedWriter, AYPosition ayPosition) throws IOException;

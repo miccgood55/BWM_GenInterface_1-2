@@ -50,7 +50,7 @@ public class DepositCore extends GenBigDataBizCore {
 	@Override
 	public void subAccToString(BufferedWriter bufferedWriter, SubAccountBatch subAccount) throws IOException {
 		SubBankAccountBatch subBankAccount = (SubBankAccountBatch)subAccount;
-		bufferedWriter.write(prepareData(subBankAccount.getSubAccountId()));bufferedWriter.write(COMMA_STRING);
+		bufferedWriter.write(prepareData(subBankAccount.getSubAccountId()));
 //		SUBACCOUNTID *	EFFECTIVERATE	PARVALUE	PRODUCTTERMUNIT	PRODUCTTERM
 		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING + COMMA_STRING);
 	}
@@ -107,6 +107,10 @@ public class DepositCore extends GenBigDataBizCore {
 	}
 
 	@Override
+	public String getDir(String dir) {
+		return Constants.DIR_DEP + dir;
+	}
+	@Override
 	public String getFilenameAcc() {
 		return Constants.FILE_NAME_DEP_ACC + getStopDate().get(Calendar.YEAR);
 	}
@@ -147,16 +151,6 @@ public class DepositCore extends GenBigDataBizCore {
 	}
 
 	@Override
-	public OutstandingBatch getOutstanding() {
-		return new DepositOutstandingBacth();
-	}
-
-	@Override
-	public ExecutionBatch getExecution() {
-		return new DepositExecutionBatch();
-	}
-
-	@Override
 	public AccountBatch getAccount() {
 		BankAccountBatch bankAccount = new BankAccountBatch();
 		bankAccount.setAccountType(1);
@@ -167,10 +161,15 @@ public class DepositCore extends GenBigDataBizCore {
 	public SubAccountBatch getSubAccount() {
 		return new SubBankAccountBatch();
 	}
+	
+	@Override
+	public OutstandingBatch getOutstanding() {
+		return new DepositOutstandingBacth();
+	}
 
 	@Override
-	public Integer getBranchId() {
-		return 1;
+	public ExecutionBatch getExecution() {
+		return new DepositExecutionBatch();
 	}
 
 }

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.wmsl.bean.AYMaster;
+import com.wmsl.bean.GenResult;
 import com.wmsl.core.Core;
 import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
@@ -28,7 +29,7 @@ public abstract class AYMasterCore extends Core{
 	public abstract AYMaster getAYMaster();
 
 	@Override
-	public long execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
+	public GenResult execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
 		log.debug("Start AYMasterCore.execute ");
 
 		BufferedWriter bufferedWriter = genFilesUtils.getBufferedWriter(getDir(),
@@ -52,7 +53,7 @@ public abstract class AYMasterCore extends Core{
 			bufferedWriter.flush();
 			bufferedWriter.close();
 		}
-		return countRecord;
+		return new GenResult().setTotalCount(countRecord);
 	}
 
 	public abstract void writeAYMaster(BufferedWriter bufferedWriter, AYMaster ayMaster) throws IOException;

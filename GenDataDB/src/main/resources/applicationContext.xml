@@ -140,6 +140,36 @@
 	</bean>
 
 	<!-- big -->
+	
+	<bean id="nonBayDebCore" scope="prototype" class="com.wmsl.core.NonBayDebCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+<!-- 		<property name="subBankAccountDao"> -->
+<!-- 			<ref bean="subBankAccountDao" /> -->
+<!-- 		</property> -->
+		
+		<property name="startYear" value="${nonbaydeb.start.year}"/>
+		<property name="startMonth" value="${nonbaydeb.start.month}"/>
+		<property name="startDay" value="${nonbaydeb.start.day}"/>
+		
+		<property name="stopYear" value="${nonbaydeb.stop.year}"/>
+		<property name="stopMonth" value="${nonbaydeb.stop.month}"/>
+		<property name="stopDay" value="${nonbaydeb.stop.day}"/>
+		
+		<property name="instrumentCode" value="${nonbaydeb.instrumentcode}"/>
+		<property name="prefixTx" value="${nonbaydeb.prefix_tx}"/>
+		<property name="dataFrom" value="${nonbaydeb.subaccount.from}"/>
+		<property name="dataTo" value="${nonbaydeb.subaccount.to}"/>
+		<property name="accountLimit" value="${nonbaydeb.account.limit}"/>
+		<property name="subAccountLimit" value="${nonbaydeb.subaccount.limit}"/>
+		<property name="outstandingLimit" value="${nonbaydeb.outstanding.limit}"/>
+		<property name="executionLimit" value="${nonbaydeb.execution.limit}"/>
+	</bean>
+	
 	<bean id="depositCore" scope="prototype" class="com.wmsl.core.DepositCore">
 		<property name="coreDao">
 			<ref bean="coreDao" />

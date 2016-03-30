@@ -66,6 +66,7 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 //	}
 
 	public abstract List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException;
+	public abstract String getDir(String dir);
 	public abstract String getFilenameAcc();
 	public abstract String getFilenameSubAcc();
 	public abstract String getFilenamePos();
@@ -74,8 +75,8 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	public abstract String getFilenameOutstanding();
 	public abstract String getFilenameAccount();
 	public abstract String getFilenameSubAccount();
+	
 	public abstract AccountBatch getAccount();
-	public abstract Integer getBranchId();
 	public abstract SubAccountBatch getSubAccount();
 	public abstract OutstandingBatch getOutstanding();
 	public abstract ExecutionBatch getExecution();
@@ -83,7 +84,11 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	public abstract void subAccToString(BufferedWriter bufferedWriter, SubAccountBatch subAccount) throws IOException;
 	public abstract void subOutstandingToString(BufferedWriter bufferedWriter, OutstandingBatch outstanding) throws IOException;
 	public abstract void subExecutionToString(BufferedWriter bufferedWriter, ExecutionBatch execution) throws IOException;
-
+	
+	public Integer getBranchId(){
+		return 1;
+	}
+	
 	public int getNextAccountId() {
 		return ACCOUNT_NEXT_ID++;
 	}
@@ -224,16 +229,16 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		}
 	}
 
-	public void setSubAccountValue(SubAccountBatch subAccount, AccountBatch account, String accountNo) {
+	public void setSubAccountValue(SubAccountBatch subAccount, String startDateFormat, AccountBatch account, String accountNo) {
 		
 		subAccount.setSubAccountId(getNextSubAccountId());
 		subAccount.setAccount(account);
 		subAccount.setSubAccountNo(accountNo);
-		subAccount.setCreateDate(CURRENT_DATE_FORMAT);
+		subAccount.setCreateDate(startDateFormat);
 		subAccount.setCreateTime("00:00:00");
 		subAccount.setCreateBy(1);
 		subAccount.setCreateByName("BWMADMIN");
-		subAccount.setLastUpdateDate(CURRENT_DATE_FORMAT);
+		subAccount.setLastUpdateDate(startDateFormat);
 		subAccount.setLastUpdateTime("00:00:00");
 		subAccount.setLastUpdateBy(1);
 		subAccount.setLastUpdateByName("BWMADMIN");
@@ -242,16 +247,16 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		
 	}
 	
-	public void setAccountValue(AccountBatch account, String accountNumber) {
+	public void setAccountValue(AccountBatch account, String startDateFormat, String accountNumber) {
 		
 		account.setAccountId(getNextAccountId());
 		account.setAccountNumber(accountNumber);
 		account.setAccountName("NAME_" + accountNumber);
-		account.setCreateDate(CURRENT_DATE_FORMAT);
+		account.setCreateDate(startDateFormat);
 		account.setCreateTime("00:00:00");
 		account.setCreateBy(1);
 		account.setCreateByName("BWMADMIN");
-		account.setLastUpdateDate(CURRENT_DATE_FORMAT);
+		account.setLastUpdateDate(startDateFormat);
 		account.setLastUpdateTime("00:00:00");
 		account.setLastUpdateBy(1);
 		account.setLastUpdateByName("BWMADMIN");

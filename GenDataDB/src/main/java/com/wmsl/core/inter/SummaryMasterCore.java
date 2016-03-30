@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.wmsl.bean.GenResult;
 import com.wmsl.bean.SummaryMaster;
 import com.wmsl.bean.dao.CustomerInfo;
 import com.wmsl.core.Core;
@@ -34,14 +35,14 @@ public class SummaryMasterCore  extends Core{
 	}
 
 	@Override
-	public long execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
+	public GenResult execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
 		log.debug("Start SummaryMasterCore.execute ");
 
 		long countRecord = 0;
 		List<CustomerInfo> customerInfos = getCustomers();
 
 		if(customerInfos.size() <= 0 ){
-			return countRecord;
+			return new GenResult().setTotalCount(countRecord);
 		}
 		
 		BufferedWriter bufferedWriterEq = genFilesUtils.getBufferedWriter(Constants.DIR_MARGIN, getFilenameEq(),
@@ -81,7 +82,7 @@ public class SummaryMasterCore  extends Core{
 			bufferedWriterDeri.close();
 		}
 
-		return countRecord;
+		return new GenResult().setTotalCount(countRecord);
 	}
 
 	public void writeSummaryMaster(BufferedWriter bufferedWriter, SummaryMaster equity) throws IOException {

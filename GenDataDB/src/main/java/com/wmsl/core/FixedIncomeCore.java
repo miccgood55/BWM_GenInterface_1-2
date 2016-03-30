@@ -91,7 +91,11 @@ public class FixedIncomeCore extends GenBigDataBizCore {
 //		List<? extends SubAccount> subAccounts = subFixedIncomeAccounts;
 //		return (List<SubAccount>) subAccounts;
 	}
-
+	@Override
+	public String getDir(String dir) {
+		return Constants.DIR_FIXED + dir;
+	}
+	
 	@Override
 	public String getFilenamePos() {
 		return Constants.FILE_NAME_BOND_POS + getStopDate().get(Calendar.YEAR);
@@ -159,12 +163,6 @@ public class FixedIncomeCore extends GenBigDataBizCore {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public Integer getBranchId() {
-		return 1;
-	}
-
 
 	@Override
 	public void accToString(BufferedWriter bufferedWriter, AccountBatch account) throws IOException {

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.wmsl.bean.GenResult;
 import com.wmsl.bean.SummaryPosition;
 import com.wmsl.core.Core;
 import com.wealth.bwm.impl.entity.cp.account.MarginAccount;
@@ -37,14 +38,14 @@ public abstract class SummaryPositionCore extends Core {
 	/*   */
 
 	@Override
-	public long execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
+	public GenResult execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
 		log.debug("Start SummaryPositionCore.execute ");
 
 		long countRecord = 0;
 		List<MarginAccount> marginAccounts = getMarginAccounts();
 
 		if(marginAccounts.size() <= 0 ){
-			return countRecord;
+			return new GenResult().setTotalCount(countRecord);
 		}
 		
 		BufferedWriter bufferedWriter = genFilesUtils.getBufferedWriter(Constants.DIR_MARGIN, getFilename(),
@@ -64,7 +65,7 @@ public abstract class SummaryPositionCore extends Core {
 			bufferedWriter.close();
 		}
 
-		return countRecord;
+		return new GenResult().setTotalCount(countRecord);
 	}
 
 }

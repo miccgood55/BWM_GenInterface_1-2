@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.wmsl.bean.GenResult;
 import com.wmsl.bean.NonBayDebMaster;
 import com.wmsl.core.Core;
 import com.wealth.exception.dao.InfoEntityServiceException;
@@ -29,7 +30,7 @@ public class NonBayDebMasterCore extends Core{
 	}
 
 	@Override
-	public long execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
+	public GenResult execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
 		log.debug("Start NonBayDebMasterCore.execute ");
 
 		BufferedWriter bufferedWriter = genFilesUtils.getBufferedWriter(Constants.DIR_NON_BAY_DEBENTURE,
@@ -55,7 +56,7 @@ public class NonBayDebMasterCore extends Core{
 			bufferedWriter.close();
 		}
 
-		return countRecord;
+		return new GenResult().setTotalCount(countRecord);
 	}
 
 	public void writeNonBayDebMaster(BufferedWriter bufferedWriter, NonBayDebMaster nonBayDebMaster) throws IOException {
