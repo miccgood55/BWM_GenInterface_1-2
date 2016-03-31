@@ -1,50 +1,50 @@
-package com.wmsl.core.inter;
+package com.wmsl.core.interfac;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 
 import org.springframework.stereotype.Component;
 
-import com.wmsl.bean.AYCalMaster;
+import com.wmsl.bean.AYCapMaster;
 import com.wmsl.bean.AYMaster;
 import com.wmsl.Constants;
 
 @Component
-public class AYCalMasterCore extends AYMasterCore{
+public class AYCapMasterCore extends AYMasterCore{
 
 	@Override
 	public String getDir() {
-		return Constants.DIR_AYCAL;
+		return Constants.DIR_AYCAP;
 	}
 
 	@Override
 	public String getFilename() {
-		return Constants.FILE_NAME_AYCAL_MASTER + CURRENT_DATE_FORMAT;
+		return Constants.FILE_NAME_AYCAP_MASTER + CURRENT_DATE_FORMAT;
 	}
 
 	@Override
 	public AYMaster getAYMaster() {
-		return new AYCalMaster();
+		return new AYCapMaster();
 	}
 
 	@Override
 	public void writeAYMaster(BufferedWriter bufferedWriter, AYMaster ayMaster) throws IOException {
 
-		AYCalMaster ayCaLMaster = (AYCalMaster) ayMaster;
+		AYCapMaster ayCapMaster = (AYCapMaster) ayMaster;
 		
-		bufferedWriter.write(ayCaLMaster.getIssuerCode() + Constants.DEFAULT_PIPE);
-		bufferedWriter.write(ayCaLMaster.getSecurityCode());
+		bufferedWriter.write(ayCapMaster.getIssuerCode() + Constants.DEFAULT_PIPE);
+		bufferedWriter.write(ayCapMaster.getSecurityCode());
 		bufferedWriter.write(Constants.DEFAULT_PIPE);
-		bufferedWriter.write(ayCaLMaster.getSecurityNameEN());
+		bufferedWriter.write(ayCapMaster.getSecurityNameEN());
 		bufferedWriter.write(Constants.DEFAULT_PIPE);
-		bufferedWriter.write(ayCaLMaster.getSecurityNameOther());
+		bufferedWriter.write(ayCapMaster.getSecurityNameOther());
 		bufferedWriter.write(Constants.DEFAULT_PIPE);
 		
-		bufferedWriter.write(ayCaLMaster.getSecurityTypeCode() + Constants.DEFAULT_PIPE);
-		bufferedWriter.write(ayCaLMaster.getIssueDate() + Constants.DEFAULT_PIPE);
-		bufferedWriter.write(ayCaLMaster.getMatureDate() + Constants.DEFAULT_PIPE);
-		bufferedWriter.write(ayCaLMaster.getReferenceSecurityCode() + Constants.DEFAULT_PIPE);
-		bufferedWriter.write(ayCaLMaster.getcurrencyCode());
+		bufferedWriter.write(ayCapMaster.getSecurityTypeCode() + Constants.DEFAULT_PIPE);
+		bufferedWriter.write(ayCapMaster.getIssueDate() + Constants.DEFAULT_PIPE);
+		bufferedWriter.write(ayCapMaster.getMatureDate() + Constants.DEFAULT_PIPE);
+		bufferedWriter.write(ayCapMaster.getReferenceSecurityCode() + Constants.DEFAULT_PIPE);
+		bufferedWriter.write(ayCapMaster.getcurrencyCode());
 		
 		bufferedWriter.write(Constants.DEFAULT_LINE_SEPARATOR);
 				
@@ -53,22 +53,22 @@ public class AYCalMasterCore extends AYMasterCore{
 	@Override
 	public AYMaster setAYMasterValue(AYMaster ayMaster, String seq) {
 		
-		AYCalMaster ayCaLMaster = (AYCalMaster) ayMaster;
+		AYCapMaster ayCapMaster = (AYCapMaster) ayMaster;
 		
-		String securityCode = Constants.PREFIX_AYCAL + seq;
+		String securityCode = Constants.PREFIX_AYCAP + seq;
 		String securityNameEN = "NAME_EN_" + seq;
 		String securityNameOTH = "NAME_OTH_" + seq;
 		
 
-		ayCaLMaster.setIssuerCode("TCS");
-		ayCaLMaster.setSecurityCode(securityCode);
-		ayCaLMaster.setSecurityNameEN(securityNameEN);
-		ayCaLMaster.setSecurityNameOther(securityNameOTH);
-		ayCaLMaster.setSecurityTypeCode("AYCAP");
-		ayCaLMaster.setIssueDate(CURRENT_DATE_FORMAT);
-		ayCaLMaster.setMatureDate(CURRENT_DATE_FORMAT);
-//		ayCaLMaster.setReferenceSecurityCode(null);
-		ayCaLMaster.setcurrencyCode("THB");
+		ayCapMaster.setIssuerCode("TCS");
+		ayCapMaster.setSecurityCode(securityCode);
+		ayCapMaster.setSecurityNameEN(securityNameEN);
+		ayCapMaster.setSecurityNameOther(securityNameOTH);
+		ayCapMaster.setSecurityTypeCode("AYCAP");
+		ayCapMaster.setIssueDate(CURRENT_DATE_FORMAT);
+		ayCapMaster.setMatureDate(CURRENT_DATE_FORMAT);
+//		ayCapMaster.setReferenceSecurityCode(null);
+		ayCapMaster.setcurrencyCode("THB");
 		
 //		1	Issuer Code				STRING			1.Look up : CM_COMPANY[COMPANYCODE].
 //													2.EX. TCS
@@ -86,7 +86,7 @@ public class AYCalMasterCore extends AYMasterCore{
 //		9	Currency Code			STRING			1. Look up : CM_CURRENCY[CURRENCYCODE]
 //													2. Default : THB
 		
-		return ayCaLMaster;
+		return ayCapMaster;
 	}
 
 }

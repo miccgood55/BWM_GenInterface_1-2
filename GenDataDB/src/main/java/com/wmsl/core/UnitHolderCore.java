@@ -56,7 +56,7 @@ public class UnitHolderCore extends GenBigDataBizCore {
 	public void subOutstandingToString(BufferedWriter bufferedWriter, OutstandingBatch outstanding) throws IOException {
 		UnitTrustOutstandingBatch unitOut = (UnitTrustOutstandingBatch)outstanding;
 		bufferedWriter.write(prepareData(unitOut.getOutstandingId()));
-		bufferedWriter.write(COMMA_STRING);bufferedWriter.write(COMMA_STRING);bufferedWriter.write(COMMA_STRING );
+//		bufferedWriter.write(COMMA_STRING);bufferedWriter.write(COMMA_STRING);bufferedWriter.write(COMMA_STRING );
 		bufferedWriter.newLine();
 	}
 
@@ -72,34 +72,36 @@ public class UnitHolderCore extends GenBigDataBizCore {
 		bufferedWriter.newLine();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException {
+	public AccountBatch getAccount() {
+		UnitTrustAccountBatch unitTrustAccountBatch = new UnitTrustAccountBatch();
+		unitTrustAccountBatch.setSource(Constants.SOURCE_UNITTRUST);
 		
-
-		Integer dataFrom = getDataFrom();
-		Integer dataTo = getDataTo();
-		List<SubUnitTrustAccount> subUnitTrustAccounts;
-		if(dataFrom == null || dataTo == null){
-			subUnitTrustAccounts = subUnitTrustAccountDao.getObjectList();
-		} else {
-			subUnitTrustAccounts = subUnitTrustAccountDao.getObjectList(dataFrom, dataTo , true, false);
-		}
-
-		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
-		for (SubUnitTrustAccount subUnitTrustAccount : subUnitTrustAccounts) {
-			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
-			subBankAccountBatch.setSubAccountId(subUnitTrustAccount.getSubAccountId());
-			subBankAccountBatchs.add(subBankAccountBatch);
-		}
-		
-		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
-		return (List<SubAccountBatch>) subAccounts;
-		
-//		List<? extends SubAccount> subAccounts = subUnitTrustAccounts;
-//		return (List<SubAccount>) subAccounts;
+		unitTrustAccountBatch.setFinancialTypeId(1);
+		return unitTrustAccountBatch;
 	}
 
+	@Override
+	public SubAccountBatch getSubAccount() {
+		return new SubUnitTrustAccountBatch();
+	}
+	
+	@Override
+	public OutstandingBatch getOutstanding() {
+		return new UnitTrustOutstandingBatch();
+	}
+
+	@Override
+	public ExecutionBatch getExecution() {
+		return new UnitTrustExecutionBatch();
+	}
+
+	/*
+	 * get Dir 
+	 * 
+	 * (non-Javadoc)
+	 * @see com.wmsl.core.GenBigDataCore#getDir(java.lang.String)
+	 */
 	@Override
 	public String getDir(String dir) {
 		return Constants.DIR_UNITTRUST + dir;
@@ -144,26 +146,32 @@ public class UnitHolderCore extends GenBigDataBizCore {
 		return Constants.FILE_NAME_EXECUTION_UNITTRUST + getStopDate().get(Calendar.YEAR);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public OutstandingBatch getOutstanding() {
-		return new UnitTrustOutstandingBatch();
-	}
+	public List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException {
+		
 
-	@Override
-	public ExecutionBatch getExecution() {
-		return new UnitTrustExecutionBatch();
-	}
+		Integer dataFrom = getDataFrom();
+		Integer dataTo = getDataTo();
+		List<SubUnitTrustAccount> subUnitTrustAccounts;
+		if(dataFrom == null || dataTo == null){
+			subUnitTrustAccounts = subUnitTrustAccountDao.getObjectList();
+		} else {
+			subUnitTrustAccounts = subUnitTrustAccountDao.getObjectList(dataFrom, dataTo , true, false);
+		}
 
-	@Override
-	public AccountBatch getAccount() {
-		UnitTrustAccountBatch unitTrustAccountBatch = new UnitTrustAccountBatch();
-		unitTrustAccountBatch.setFinancialTypeId(1);
-		return unitTrustAccountBatch;
-	}
-
-	@Override
-	public SubAccountBatch getSubAccount() {
-		return new SubUnitTrustAccountBatch();
+		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
+		for (SubUnitTrustAccount subUnitTrustAccount : subUnitTrustAccounts) {
+			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
+			subBankAccountBatch.setSubAccountId(subUnitTrustAccount.getSubAccountId());
+			subBankAccountBatchs.add(subBankAccountBatch);
+		}
+		
+		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
+		return (List<SubAccountBatch>) subAccounts;
+		
+//		List<? extends SubAccount> subAccounts = subUnitTrustAccounts;
+//		return (List<SubAccount>) subAccounts;
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.wmsl.core.inter;
+package com.wmsl.core.interfac;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

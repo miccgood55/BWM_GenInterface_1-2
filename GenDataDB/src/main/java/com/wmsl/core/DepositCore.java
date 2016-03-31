@@ -44,6 +44,8 @@ public class DepositCore extends GenBigDataBizCore {
 		bufferedWriter.write(prepareData(bankAccount.getAccountId()));bufferedWriter.write(COMMA_STRING);
 		bufferedWriter.write(prepareData(bankAccount.getAccountType()) + COMMA_STRING);
 		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
+
+		bufferedWriter.newLine();
 		
 	}
 
@@ -53,6 +55,8 @@ public class DepositCore extends GenBigDataBizCore {
 		bufferedWriter.write(prepareData(subBankAccount.getSubAccountId()));
 //		SUBACCOUNTID *	EFFECTIVERATE	PARVALUE	PRODUCTTERMUNIT	PRODUCTTERM
 		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING + COMMA_STRING);
+
+		bufferedWriter.newLine();
 	}
 
 	@Override
@@ -68,44 +72,47 @@ public class DepositCore extends GenBigDataBizCore {
 		bufferedWriter.write(prepareData(depOut.getMaintenanceMargin()));
 
 		bufferedWriter.newLine();
-//		bufferedWriter.flush();
 	}
 
 	@Override
 	public void subExecutionToString(BufferedWriter bufferedWriter, ExecutionBatch execution) throws IOException {
 		DepositExecutionBatch depExe = (DepositExecutionBatch)execution;
-		
 		bufferedWriter.write(prepareData(depExe.getExecutionId()));
-
 		bufferedWriter.newLine();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException {
+	public AccountBatch getAccount() {
+		BankAccountBatch bankAccount = new BankAccountBatch();
+		bankAccount.setSource(Constants.SOURCE_DEP);
 		
-		Integer dataFrom = getDataFrom();
-		Integer dataTo = getDataTo();
-		List<SubBankAccount> subBankAccounts;
-		if(dataFrom == null || dataTo == null){
-			subBankAccounts = subBankAccountDao.getObjectList();
-		} else {
-			subBankAccounts = subBankAccountDao.getObjectList(dataFrom, dataTo , true, false);
-		}
-
-		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
-		for (SubBankAccount subBankAccount : subBankAccounts) {
-			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
-			subBankAccountBatch.setSubAccountId(subBankAccount.getSubAccountId());
-			subBankAccountBatchs.add(subBankAccountBatch);
-		}
-		
-		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
-		return (List<SubAccountBatch>) subAccounts;
-//		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
-//		return (List<SubAccountBatch>) subAccounts;
+		bankAccount.setAccountType(1);
+		return bankAccount;
 	}
 
+	@Override
+	public SubAccountBatch getSubAccount() {
+		return new SubBankAccountBatch();
+	}
+	
+	@Override
+	public OutstandingBatch getOutstanding() {
+		return new DepositOutstandingBacth();
+	}
+
+	@Override
+	public ExecutionBatch getExecution() {
+		return new DepositExecutionBatch();
+	}
+
+	
+	/* 
+	 * get Dir
+	 * 
+	 * (non-Javadoc)
+	 * @see com.wmsl.core.GenBigDataCore#getDir(java.lang.String)
+	 * 
+	 */
 	@Override
 	public String getDir(String dir) {
 		return Constants.DIR_DEP + dir;
@@ -150,26 +157,29 @@ public class DepositCore extends GenBigDataBizCore {
 		return Constants.FILE_NAME_OUTSTANDING_DEPOSIT + getStopDate().get(Calendar.YEAR);
 	}
 
-	@Override
-	public AccountBatch getAccount() {
-		BankAccountBatch bankAccount = new BankAccountBatch();
-		bankAccount.setAccountType(1);
-		return bankAccount;
-	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public SubAccountBatch getSubAccount() {
-		return new SubBankAccountBatch();
+	public List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException {
+		
+		Integer dataFrom = getDataFrom();
+		Integer dataTo = getDataTo();
+		List<SubBankAccount> subBankAccounts;
+		if(dataFrom == null || dataTo == null){
+			subBankAccounts = subBankAccountDao.getObjectList();
+		} else {
+			subBankAccounts = subBankAccountDao.getObjectList(dataFrom, dataTo , true, false);
+		}
+
+		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
+		for (SubBankAccount subBankAccount : subBankAccounts) {
+			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
+			subBankAccountBatch.setSubAccountId(subBankAccount.getSubAccountId());
+			subBankAccountBatchs.add(subBankAccountBatch);
+		}
+		
+		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
+		return (List<SubAccountBatch>) subAccounts;
 	}
 	
-	@Override
-	public OutstandingBatch getOutstanding() {
-		return new DepositOutstandingBacth();
-	}
-
-	@Override
-	public ExecutionBatch getExecution() {
-		return new DepositExecutionBatch();
-	}
-
 }

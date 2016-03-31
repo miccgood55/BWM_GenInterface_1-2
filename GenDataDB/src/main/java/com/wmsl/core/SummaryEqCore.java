@@ -13,18 +13,16 @@ import org.springframework.stereotype.Component;
 import com.wealth.bwm.batch.impl.entity.cp.account.AccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.MarginAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.SubAccountBatch;
-import com.wealth.bwm.batch.impl.entity.cp.account.SubBankAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.SubMarginAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.execution.ExecutionBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.MarginOutstandingBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.OutstandingBatch;
-import com.wealth.bwm.impl.entity.cp.account.SubBankAccount;
 import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.Constants;
 
 @Component
-public class SummaryAccCore extends GenBigDataBizCore {
+public class SummaryEqCore extends GenBigDataBizCore {
 
 	private static final BigDecimal APTRADE = new BigDecimal(31436.83).setScale(4, RoundingMode.HALF_UP);
 	private static final BigDecimal ARTRADE = BigDecimal.ZERO.setScale(4, RoundingMode.HALF_UP);
@@ -42,12 +40,6 @@ public class SummaryAccCore extends GenBigDataBizCore {
 	@Override
 	public String getAccountNumber(String cifCode, int accountIndex) {
 		return getAccountNumber(Constants.PREFIX_EQ, cifCode, accountIndex);
-	}
-
-	@Override
-	public void setAccountValue(AccountBatch account, String startDateFormat, String accountNumber) {
-		super.setAccountValue(account, startDateFormat, accountNumber);
-		account.setSource(Constants.SOURCE_SUMMARY_ACC);
 	}
 
 	public void setSubAccountValue(SubAccountBatch subAccount, String startDateFormat, AccountBatch account, String accountNo) {
@@ -137,6 +129,8 @@ public class SummaryAccCore extends GenBigDataBizCore {
 	@Override
 	public AccountBatch getAccount() {
 		MarginAccountBatch marginAccount = new MarginAccountBatch();
+		marginAccount.setSource(Constants.SOURCE_SUMMARY_ACC);
+		
 		marginAccount.setMarginType(1);
 		return marginAccount;
 	}
@@ -191,7 +185,7 @@ public class SummaryAccCore extends GenBigDataBizCore {
 	
 	@Override
 	public String getFilenameAccount() {
-		return Constants.FILE_NAME_ACCOUNT_DEPOSIT + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_ACCOUNT_MARGIN + getStopDate().get(Calendar.YEAR);
 	}
 
 	@Override
@@ -212,27 +206,8 @@ public class SummaryAccCore extends GenBigDataBizCore {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException {
-		
-//		Integer dataFrom = getDataFrom();
-//		Integer dataTo = getDataTo();
-		List<SubBankAccount> subBankAccounts = new ArrayList<SubBankAccount>();
-//		if(dataFrom == null || dataTo == null){
-//			subBankAccounts = subBankAccountDao.getObjectList();
-//		} else {
-//			subBankAccounts = subBankAccountDao.getObjectList(dataFrom, dataTo , true, false);
-//		}
-
-		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
-		for (SubBankAccount subBankAccount : subBankAccounts) {
-			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
-			subBankAccountBatch.setSubAccountId(subBankAccount.getSubAccountId());
-			subBankAccountBatchs.add(subBankAccountBatch);
-		}
-		
-		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
+		List<? extends SubAccountBatch> subAccounts = new ArrayList<SubAccountBatch>();
 		return (List<SubAccountBatch>) subAccounts;
-//		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
-//		return (List<SubAccountBatch>) subAccounts;
 	}
 
 }

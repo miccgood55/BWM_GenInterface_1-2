@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
 	<!-- <beans xmlns="http://www.springframework.org/schema/beans" -->
 	<!-- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" -->
@@ -144,6 +143,58 @@
 
 	<!-- big -->
 	
+	<bean id="ayCapCore" scope="prototype" class="com.wmsl.core.AYCapCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
+		
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
+		
+		<property name="instrumentCode" value="${aycap.instrumentcode}"/>
+		<property name="prefixTx" value="${aycap.prefix_tx}"/>
+		<property name="dataFrom" value="${aycap.subaccount.from}"/>
+		<property name="dataTo" value="${aycap.subaccount.to}"/>
+		<property name="accountLimit" value="${aycap.account.limit}"/>
+		<property name="subAccountLimit" value="${aycap.subaccount.limit}"/>
+		<property name="outstandingLimit" value="${aycap.outstanding.limit}"/>
+		<property name="executionLimit" value="${aycap.execution.limit}"/>
+	</bean>
+	
+	<bean id="ayCalCore" scope="prototype" class="com.wmsl.core.AYCalCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
+		
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
+		
+		<property name="instrumentCode" value="${aycal.instrumentcode}"/>
+		<property name="prefixTx" value="${aycal.prefix_tx}"/>
+		<property name="dataFrom" value="${aycal.subaccount.from}"/>
+		<property name="dataTo" value="${aycal.subaccount.to}"/>
+		<property name="accountLimit" value="${aycal.account.limit}"/>
+		<property name="subAccountLimit" value="${aycal.subaccount.limit}"/>
+		<property name="outstandingLimit" value="${aycal.outstanding.limit}"/>
+		<property name="executionLimit" value="${aycal.execution.limit}"/>
+	</bean>
+	
 	<bean id="summaryAccCore" scope="prototype" class="com.wmsl.core.SummaryAccCore">
 		<property name="coreDao">
 			<ref bean="coreDao" />
@@ -152,13 +203,13 @@
 			<ref bean="genFilesUtils" />
 		</property>
 		
-		<property name="startYear" value="${summaryacc.start.year}"/>
-		<property name="startMonth" value="${summaryacc.start.month}"/>
-		<property name="startDay" value="${summaryacc.start.day}"/>
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
 		
-		<property name="stopYear" value="${summaryacc.stop.year}"/>
-		<property name="stopMonth" value="${summaryacc.stop.month}"/>
-		<property name="stopDay" value="${summaryacc.stop.day}"/>
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
 		
 		<property name="instrumentCode" value="${summaryacc.instrumentcode}"/>
 		<property name="prefixTx" value="${summaryacc.prefix_tx}"/>
@@ -179,13 +230,13 @@
 			<ref bean="genFilesUtils" />
 		</property>
 		
-		<property name="startYear" value="${summaryderi.start.year}"/>
-		<property name="startMonth" value="${summaryderi.start.month}"/>
-		<property name="startDay" value="${summaryderi.start.day}"/>
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
 		
-		<property name="stopYear" value="${summaryderi.stop.year}"/>
-		<property name="stopMonth" value="${summaryderi.stop.month}"/>
-		<property name="stopDay" value="${summaryderi.stop.day}"/>
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
 		
 		<property name="instrumentCode" value="${summaryderi.instrumentcode}"/>
 		<property name="prefixTx" value="${summaryderi.prefix_tx}"/>
@@ -208,13 +259,13 @@
 <!-- 			<ref bean="subBankAccountDao" /> -->
 <!-- 		</property> -->
 		
-		<property name="startYear" value="${nonbaydeb.start.year}"/>
-		<property name="startMonth" value="${nonbaydeb.start.month}"/>
-		<property name="startDay" value="${nonbaydeb.start.day}"/>
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
 		
-		<property name="stopYear" value="${nonbaydeb.stop.year}"/>
-		<property name="stopMonth" value="${nonbaydeb.stop.month}"/>
-		<property name="stopDay" value="${nonbaydeb.stop.day}"/>
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
 		
 		<property name="instrumentCode" value="${nonbaydeb.instrumentcode}"/>
 		<property name="prefixTx" value="${nonbaydeb.prefix_tx}"/>
@@ -237,13 +288,13 @@
 			<ref bean="subBankAccountDao" />
 		</property>
 		
-		<property name="startYear" value="${deposit.start.year}"/>
-		<property name="startMonth" value="${deposit.start.month}"/>
-		<property name="startDay" value="${deposit.start.day}"/>
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
 		
-		<property name="stopYear" value="${deposit.stop.year}"/>
-		<property name="stopMonth" value="${deposit.stop.month}"/>
-		<property name="stopDay" value="${deposit.stop.day}"/>
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
 		
 		<property name="instrumentCode" value="${deposit.instrumentcode}"/>
 		<property name="prefixTx" value="${deposit.prefix_tx}"/>
@@ -266,13 +317,13 @@
 			<ref bean="subFixedIncomeAccountDao" />
 		</property>
 		
-		<property name="startYear" value="${fixedincome.start.year}"/>
-		<property name="startMonth" value="${fixedincome.start.month}"/>
-		<property name="startDay" value="${fixedincome.start.day}"/>
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
 		
-		<property name="stopYear" value="${fixedincome.stop.year}"/>
-		<property name="stopMonth" value="${fixedincome.stop.month}"/>
-		<property name="stopDay" value="${fixedincome.stop.day}"/>
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
 		
 		<property name="instrumentCode" value="${fixedincome.instrumentcode}"/>
 		<property name="prefixTx" value="${fixedincome.prefix_tx}"/>
@@ -296,13 +347,13 @@
 			<ref bean="subUnitTrustAccountDao" />
 		</property>
 		
-		<property name="startYear" value="${unitholder.start.year}"/>
-		<property name="startMonth" value="${unitholder.start.month}"/>
-		<property name="startDay" value="${unitholder.start.day}"/>
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
 		
-		<property name="stopYear" value="${unitholder.stop.year}"/>
-		<property name="stopMonth" value="${unitholder.stop.month}"/>
-		<property name="stopDay" value="${unitholder.stop.day}"/>
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
 		
 		<property name="instrumentCode" value="${unitholder.instrumentcode}"/>
 		<property name="prefixTx" value="${unitholder.prefix_tx}"/>

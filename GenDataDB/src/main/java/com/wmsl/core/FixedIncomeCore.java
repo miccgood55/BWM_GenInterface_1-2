@@ -98,12 +98,12 @@ public class FixedIncomeCore extends GenBigDataBizCore {
 	
 	@Override
 	public String getFilenamePos() {
-		return Constants.FILE_NAME_BOND_POS + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_FIXED_POS + getStopDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameTx() {
-		return Constants.FILE_NAME_BOND_TX + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_FIXED_TX + getStopDate().get(Calendar.YEAR);
 	}
 
 	@Override

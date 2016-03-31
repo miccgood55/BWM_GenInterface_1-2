@@ -13,12 +13,10 @@ import org.springframework.stereotype.Component;
 import com.wealth.bwm.batch.impl.entity.cp.account.AccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.CreditloanAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.SubAccountBatch;
-import com.wealth.bwm.batch.impl.entity.cp.account.SubBankAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.SubCreditLoanAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.execution.ExecutionBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.CreditLoanOutstandingBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.OutstandingBatch;
-import com.wealth.bwm.impl.entity.cp.account.SubBankAccount;
 import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.Constants;
@@ -52,49 +50,34 @@ public class AYCapCore extends GenBigDataInstrumentsCore{
 	public void setAccountValue(AccountBatch account, String startDateFormat, String accountNumber) {
 		super.setAccountValue(account, startDateFormat, accountNumber);
 
-//		accountNo
 
-		Long accountNumberL = Long.valueOf(accountNumber);
 		StringBuilder sb = new StringBuilder(accountNumber.substring(0, 4))
 				.append(accountNumber.substring(5, 12))
 				.append(accountNumber.substring(13, 16));
-		sb.toString();
-		
 		account.setAccountNumber(sb.toString());
-		account.setAccountName(prefixAccountName + (accountNumberL - accountNo));
+		
+		String accountName = prefixAccountName + accountNumber;
+		account.setAccountName(accountName);
 
-		account.setCreateBy(2);
-		account.setCreateByName("System");
-		account.setLastUpdateBy(2);
-		account.setLastUpdateByName("System");
 		account.setOpenDate(startDateFormat);
 		account.setCloseDate(startDateFormat);
 		
 		account.setSource(Constants.SOURCE_AYCAP);
-		account.setAccountNameOther(sb.toString());
+		account.setAccountNameOther(accountName);
 		
 	}
 
 	@Override
-	public void setSubAccountValue(SubAccountBatch subAccount, String startDateFormat, AccountBatch account, String accountNo) {
-		super.setSubAccountValue(subAccount, startDateFormat, account, accountNo);
+	public void setSubAccountValue(SubAccountBatch subAccount, String startDateFormat, AccountBatch account, String accountNumber) {
+		super.setSubAccountValue(subAccount, startDateFormat, account, accountNumber);
 
-		subAccount.setCreateBy(2);
-		subAccount.setCreateByName("System");
-		subAccount.setLastUpdateBy(2);
-		subAccount.setLastUpdateByName("System");
-		
 		subAccount.setIssueDate(startDateFormat);
-//		subAccount.setMatureDate(startDateFormat);
 		subAccount.setCloseDate(startDateFormat);
-		
 
 		SubCreditLoanAccountBatch subCreditloanAccount= (SubCreditLoanAccountBatch)subAccount;
 		
-		String accountName = account.getAccountName();
-		String seq = accountName.replace(prefixAccountName, "");
+		subCreditloanAccount.setAccountNoCreditCard(accountNumber);
 		
-		subCreditloanAccount.setAccountNoCreditCard(String.valueOf(this.accountNo + Long.valueOf(seq)));
 	}
 
 	
@@ -128,6 +111,8 @@ public class AYCapCore extends GenBigDataInstrumentsCore{
 
 		bufferedWriter.write(prepareData(creditloanAccount.getAccountId()));
 		bufferedWriter.write(COMMA_STRING + COMMA_STRING);
+
+		bufferedWriter.newLine();
 	}
 
 	@Override
@@ -136,6 +121,8 @@ public class AYCapCore extends GenBigDataInstrumentsCore{
 		bufferedWriter.write(prepareData(subCreditloanAccount.getSubAccountId()));
 		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
 		bufferedWriter.write(prepareData(subCreditloanAccount.getAccountNoCreditCard()));
+
+		bufferedWriter.newLine();
 	}
 
 	@Override
@@ -154,7 +141,7 @@ public class AYCapCore extends GenBigDataInstrumentsCore{
 		bufferedWriter.write(prepareData(CreditloanOutstanding.getFaceValue()) + COMMA_STRING);
 		bufferedWriter.write(prepareData(CreditloanOutstanding.getInstallmentAmount()) + COMMA_STRING);
 		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING + COMMA_STRING + COMMA_STRING);
-		bufferedWriter.write(prepareData(CreditloanOutstanding.getDelinquencyDesc()) + COMMA_STRING);
+		bufferedWriter.write(prepareData(CreditloanOutstanding.getDelinquencyDesc()));
 
 		bufferedWriter.newLine();
 	}
@@ -173,9 +160,9 @@ public class AYCapCore extends GenBigDataInstrumentsCore{
 	 */
 	@Override
 	public AccountBatch getAccount() {
-		CreditloanAccountBatch CreditloanAccount = new CreditloanAccountBatch();
-//		CreditloanAccount.setCreditloanType(1);
-		return CreditloanAccount;
+		CreditloanAccountBatch creditloanAccount = new CreditloanAccountBatch();
+		creditloanAccount.setSource(Constants.SOURCE_AYCAP);
+		return creditloanAccount;
 	}
 
 	@Override
@@ -184,9 +171,7 @@ public class AYCapCore extends GenBigDataInstrumentsCore{
 	}
 	@Override
 	public OutstandingBatch getOutstanding() {
-		CreditLoanOutstandingBatch CreditloanOutstanding = new CreditLoanOutstandingBatch();
-//		CreditloanOutstanding.setDueDate(dueDate);
-		return CreditloanOutstanding;
+		return new CreditLoanOutstandingBatch();
 	}
 
 	@Override
@@ -250,26 +235,8 @@ public class AYCapCore extends GenBigDataInstrumentsCore{
 	@Override
 	public List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException {
 		
-//		Integer dataFrom = getDataFrom();
-//		Integer dataTo = getDataTo();
-		List<SubBankAccount> subBankAccounts = new ArrayList<SubBankAccount>();
-//		if(dataFrom == null || dataTo == null){
-//			subBankAccounts = subBankAccountDao.getObjectList();
-//		} else {
-//			subBankAccounts = subBankAccountDao.getObjectList(dataFrom, dataTo , true, false);
-//		}
-
-		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
-		for (SubBankAccount subBankAccount : subBankAccounts) {
-			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
-			subBankAccountBatch.setSubAccountId(subBankAccount.getSubAccountId());
-			subBankAccountBatchs.add(subBankAccountBatch);
-		}
-		
-		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
+		List<? extends SubAccountBatch> subAccounts = new ArrayList<SubAccountBatch>();
 		return (List<SubAccountBatch>) subAccounts;
-//		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
-//		return (List<SubAccountBatch>) subAccounts;
 	}
 	
 }

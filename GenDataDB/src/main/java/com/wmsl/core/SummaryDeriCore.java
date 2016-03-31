@@ -13,12 +13,10 @@ import org.springframework.stereotype.Component;
 import com.wealth.bwm.batch.impl.entity.cp.account.AccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.MarginAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.SubAccountBatch;
-import com.wealth.bwm.batch.impl.entity.cp.account.SubBankAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.SubMarginAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.execution.ExecutionBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.MarginOutstandingBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.OutstandingBatch;
-import com.wealth.bwm.impl.entity.cp.account.SubBankAccount;
 import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.Constants;
@@ -62,20 +60,12 @@ public class SummaryDeriCore extends GenBigDataBizCore {
 		return getAccountNumber(Constants.PREFIX_DERI, cifCode, accountIndex);
 	}
 
-	@Override
-	public void setAccountValue(AccountBatch account, String startDateFormat, String accountNumber) {
-		super.setAccountValue(account, startDateFormat, accountNumber);
-		account.setSource(Constants.SOURCE_SUMMARY_DERI);
-	}
-
 	public void setSubAccountValue(SubAccountBatch subAccount, String startDateFormat, AccountBatch account, String accountNo) {
 		super.setSubAccountValue(subAccount, startDateFormat, account, accountNo);
 		subAccount.setIssueDate(startDateFormat);
 		subAccount.setMatureDate(startDateFormat);
 		subAccount.setCloseDate(startDateFormat);
 	}
-
-	
 	
 	@Override
 	public void setOutstandingValue(OutstandingBatch outstanding, String dateFormat, SubAccountBatch subAccount) {
@@ -171,6 +161,8 @@ public class SummaryDeriCore extends GenBigDataBizCore {
 	@Override
 	public AccountBatch getAccount() {
 		MarginAccountBatch marginAccount = new MarginAccountBatch();
+		marginAccount.setSource(Constants.SOURCE_SUMMARY_DERI);
+		
 		marginAccount.setMarginType(1);
 		return marginAccount;
 	}
@@ -248,7 +240,7 @@ public class SummaryDeriCore extends GenBigDataBizCore {
 	
 	@Override
 	public String getFilenameAccount() {
-		return Constants.FILE_NAME_ACCOUNT_DEPOSIT + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_ACCOUNT_MARGIN + getStopDate().get(Calendar.YEAR);
 	}
 
 	@Override

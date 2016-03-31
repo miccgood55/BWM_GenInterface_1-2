@@ -8,13 +8,9 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
-import java.nio.CharBuffer;
-import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.wmsl.App;
 import com.wmsl.Constants;
 
 @Component
@@ -50,16 +46,17 @@ public class GenFilesUtils {
 		    String line;
 		    
 		    // อ่านไฟล์ทีละบรรทัด
-		    int count = 0;
+//		    int count = 0;
 		    while ((line = bf.readLine()) != null) {
 		        if(line != null && !line.equals("")){
-		        	count++;
+//		        	count++;
 		        }
 				bufferedWriter.write(line);
 		    }
 		    // ปิด input stream
 		    instream.close();
-		    
+		    bufferedWriter.flush();
+		    bufferedWriter.close();
 
 		} catch (Exception e) {
 		    System.out.println("Error: " + e.getMessage());

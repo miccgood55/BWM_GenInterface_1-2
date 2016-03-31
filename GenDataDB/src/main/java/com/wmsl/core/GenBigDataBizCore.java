@@ -132,9 +132,16 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 						// OutStanding
 						for (int outStandingIndex = 0; outStandingIndex < outstandingPerSubAcc; outStandingIndex++) {
 
+							OutstandingBatch outstanding = null;
+							try{
+								outstanding = getOutstanding();
+							} catch (UnsupportedOperationException e){
+								break;
+							}
+
 							String dateFormat = sdf.format(outStandingDate.getTime());
 
-							OutstandingBatch outstanding = getOutstanding();
+							
 							setOutstandingValue(outstanding, dateFormat, subAccount);
 
 							outstandingToString(bufferedWriterOutStanding, outstanding);
@@ -158,12 +165,18 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 						// Execution
 						for (int executionIndex = 0; executionIndex < executionPerSubAcc; executionIndex++) {
 
+
+							ExecutionBatch execution = null;
+							try{
+								execution = getExecution();
+							} catch (UnsupportedOperationException e){
+								break;
+							}
 							
 							executionDate.setTime(startDate.getTime());
 							executionDate.add(Calendar.DATE, ls.get(executionIndex));
 							String dateFormat = sdf.format(executionDate.getTime());
 							
-							ExecutionBatch execution = getExecution();
 							setExecutionValue(execution, dateFormat, subAccount, getTxSeq(seq++));
 
 							executionToString(bufferedWriterExe, execution);

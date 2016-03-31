@@ -274,7 +274,7 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		account.setLastUpdateBy(1);
 		account.setLastUpdateByName("BWMADMIN");
 		account.setBranchId(getBranchId());
-		account.setSource("BAY-CA");
+//		account.setSource("BAY-CA");
 		account.setAccountNameOther("NAME_" + accountNumber);
 	}
 	

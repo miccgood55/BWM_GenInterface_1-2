@@ -14,6 +14,9 @@ public class Constants {
 	public static final String PREFIX_AYCAP = "AYCAP_";
 	public static final String PREFIX_AYCAL = "AYCAL_";
 	
+
+	public static final String SOURCE_DEP = "BAY-CA";
+	public static final String SOURCE_UNITTRUST = "BAY-UNITTRUST";	
 	public static final String SOURCE_SUMMARY_ACC = "KSS-Equity";
 	public static final String SOURCE_SUMMARY_DERI = "KSS-Derivative";
 	public static final String SOURCE_NONBAY_DEB = "NONBAY-DEBENTURE";
@@ -75,10 +78,10 @@ public class Constants {
 	public static final String FILE_NAME_OUTSTANDING_FIXED = "CP_OUTSTANDING-fixed";
 	public static final String FILE_NAME_EXECUTION_FIXED = "CP_EXECUTION-fixed";
 
-	public static final String FILE_NAME_BOND_ACC = "CP_FIXEDINCOMEACCOUNT";
-	public static final String FILE_NAME_BOND_SUBACC = "CP_SUBFIXEDINCOMEACCOUNT";
-	public static final String FILE_NAME_BOND_POS = "CP_FIXEDINCOMEOUTSTANDING";
-	public static final String FILE_NAME_BOND_TX = "CP_FIXEDINCOMEEXECUTION";
+	public static final String FILE_NAME_FIXED_ACC = "CP_FIXEDINCOMEACCOUNT";
+	public static final String FILE_NAME_FIXED_SUBACC = "CP_SUBFIXEDINCOMEACCOUNT";
+	public static final String FILE_NAME_FIXED_POS = "CP_FIXEDINCOMEOUTSTANDING";
+	public static final String FILE_NAME_FIXED_TX = "CP_FIXEDINCOMEEXECUTION";
 
 //	===  unittrust  === //
 	public static final String DIR_UNITTRUST = DIR_BIG + "unittrust" + PATH_DELI;
