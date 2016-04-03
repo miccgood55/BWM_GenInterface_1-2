@@ -5,25 +5,60 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.stereotype.Component;
 
 import com.wealth.bwm.batch.impl.entity.cp.account.AccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.FixedIncomeAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.SubAccountBatch;
-import com.wealth.bwm.batch.impl.entity.cp.account.SubBankAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.SubFixedIncomeAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.execution.ExecutionBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.execution.FixedIncomeExecutionBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.OutstandingBatch;
-import com.wealth.bwm.impl.entity.cp.account.SubBankAccount;
 import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.Constants;
+import com.wmsl.utils.GenDataDBUtils;
 
 @Component
 public class NonBayDebCore extends GenBigDataInstrumentsCore{
+
+	private static List<Integer> LIST_ALL;
+	private static final int SEND_DATE = 0;
+	@Override
+	public void init() {
+		List<Integer> listWeek = GenDataDBUtils.getListInteger(1, 53);
+		
+		Calendar c = Calendar.getInstance(Locale.ENGLISH);
+		int startYear = this.getStartYear();
+		c.set(startYear, this.getStartMonth(), this.getStartDay());
+		c.set(Calendar.DAY_OF_WEEK, SEND_DATE);
+		
+		for (Integer week : listWeek) {
+			c.set(Calendar.WEEK_OF_YEAR, week);
+			
+			if(startYear == c.get(Calendar.YEAR)){
+				LIST_ALL.add(c.get(Calendar.DAY_OF_YEAR));
+			}
+		}
+	}
+
+	@Override
+	public List<Integer> getOutstandingRandom(int outstandPerSubAcc) {
+		return LIST_ALL;
+	}
+
+	@Override
+	public List<Integer> getExecutionRandom(int executionPerSubAcc) {
+		List<Integer> listRet = new ArrayList<Integer>(LIST_ALL);
+		
+		Collections.shuffle(listRet);
+		
+		return listRet;
+	}
 
 	/*
 	 * override to modifile
@@ -143,7 +178,7 @@ public class NonBayDebCore extends GenBigDataInstrumentsCore{
 	 */
 	@Override
 	public String getDir(String dir) {
-		return Constants.DIR_FIXED + dir;
+		return Constants.DIR_NONBAY + dir;
 	}
 	@Override
 	public String getFilenameAcc() {
@@ -185,30 +220,9 @@ public class NonBayDebCore extends GenBigDataInstrumentsCore{
 		return Constants.FILE_NAME_OUTSTANDING_FIXED + getStopDate().get(Calendar.YEAR);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException {
-		
-//		Integer dataFrom = getDataFrom();
-//		Integer dataTo = getDataTo();
-		List<SubBankAccount> subBankAccounts = new ArrayList<SubBankAccount>();
-//		if(dataFrom == null || dataTo == null){
-//			subBankAccounts = subBankAccountDao.getObjectList();
-//		} else {
-//			subBankAccounts = subBankAccountDao.getObjectList(dataFrom, dataTo , true, false);
-//		}
-
-		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
-		for (SubBankAccount subBankAccount : subBankAccounts) {
-			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
-			subBankAccountBatch.setSubAccountId(subBankAccount.getSubAccountId());
-			subBankAccountBatchs.add(subBankAccountBatch);
-		}
-		
-		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
-		return (List<SubAccountBatch>) subAccounts;
-//		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
-//		return (List<SubAccountBatch>) subAccounts;
+		return new ArrayList<SubAccountBatch>();
 	}
 	
 }

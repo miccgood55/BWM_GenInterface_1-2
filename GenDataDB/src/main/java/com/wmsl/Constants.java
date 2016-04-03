@@ -73,6 +73,7 @@ public class Constants {
 
 //	===  fixed  === //
 	public static final String DIR_FIXED = DIR_BIG + "fixed" + PATH_DELI;
+	public static final String DIR_NONBAY = DIR_BIG + "nonbay" + PATH_DELI;
 	public static final String FILE_NAME_ACCOUNT_FIXED = "CP_ACCOUNT-fixed";
 	public static final String FILE_NAME_SUBACCOUNT_FIXED = "CP_SUBACCOUNT-fixed";
 	public static final String FILE_NAME_OUTSTANDING_FIXED = "CP_OUTSTANDING-fixed";

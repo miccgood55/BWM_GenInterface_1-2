@@ -44,7 +44,7 @@
 	<!-- Core -->
 	
 	<!-- AYCal -->
-	<bean id="ayCalMasterCore" scope="prototype" class="com.wmsl.core.inter.AYCalMasterCore">
+	<bean id="ayCalMasterCore" scope="prototype" class="com.wmsl.core.interfac.AYCalMasterCore">
 		<property name="coreDao">
 			<ref bean="coreDao" />
 		</property>
@@ -54,7 +54,7 @@
 		<property name="aYMasterLimit" value="${aycalmaster.limit}"/>
 	</bean>
 	
-	<bean id="ayCalPosCore" scope="prototype" class="com.wmsl.core.inter.AYCalPosCore">
+	<bean id="ayCalPosCore" scope="prototype" class="com.wmsl.core.interfac.AYCalPosCore">
 		<property name="coreDao">
 			<ref bean="coreDao" />
 		</property>
@@ -65,7 +65,7 @@
 	</bean>
 	
 	<!-- AYCap -->
-	<bean id="ayCapMasterCore" scope="prototype" class="com.wmsl.core.inter.AYCapMasterCore">
+	<bean id="ayCapMasterCore" scope="prototype" class="com.wmsl.core.interfac.AYCapMasterCore">
 		<property name="coreDao">
 			<ref bean="coreDao" />
 		</property>
@@ -75,7 +75,7 @@
 		<property name="aYMasterLimit" value="${aycapmaster.limit}"/>
 	</bean>
 	
-	<bean id="ayCapPosCore" scope="prototype" class="com.wmsl.core.inter.AYCapPosCore">
+	<bean id="ayCapPosCore" scope="prototype" class="com.wmsl.core.interfac.AYCapPosCore">
 		<property name="coreDao">
 			<ref bean="coreDao" />
 		</property>
@@ -86,7 +86,7 @@
 	</bean>
 	
 	<!-- NonBay-Debenture -->
-	<bean id="nonBayDebTxCore" scope="prototype" class="com.wmsl.core.inter.NonBayDebTxCore">
+	<bean id="nonBayDebTxCore" scope="prototype" class="com.wmsl.core.interfac.NonBayDebTxCore">
 		<property name="coreDao">
 			<ref bean="coreDao" />
 		</property>
@@ -96,7 +96,7 @@
 		<property name="nonBayDebTxLimit" value="${nonbaydebtx.limit}"/>
 	</bean>
 	
-	<bean id="nonBayDebMasterCore" scope="prototype" class="com.wmsl.core.inter.NonBayDebMasterCore">
+	<bean id="nonBayDebMasterCore" scope="prototype" class="com.wmsl.core.interfac.NonBayDebMasterCore">
 		<property name="coreDao">
 			<ref bean="coreDao" />
 		</property>
@@ -108,7 +108,7 @@
 	
 	
 	<!-- Summary -->
-	<bean id="summaryPositionEqCore" scope="prototype" class="com.wmsl.core.inter.SummaryPositionEqCore">
+	<bean id="summaryPositionEqCore" scope="prototype" class="com.wmsl.core.interfac.SummaryPositionEqCore">
 		<property name="coreDao">
 			<ref bean="coreDao" />
 		</property>
@@ -118,7 +118,7 @@
 	
 	</bean>
 	
-	<bean id="summaryPositionDeriCore" scope="prototype" class="com.wmsl.core.inter.SummaryPositionDeriCore">
+	<bean id="summaryPositionDeriCore" scope="prototype" class="com.wmsl.core.interfac.SummaryPositionDeriCore">
 		<property name="coreDao">
 			<ref bean="coreDao" />
 		</property>
@@ -128,7 +128,7 @@
 	
 	</bean>
 	
-	<bean id="summaryMasterCore" scope="prototype" class="com.wmsl.core.inter.SummaryMasterCore">
+	<bean id="summaryMasterCore" scope="prototype" class="com.wmsl.core.interfac.SummaryMasterCore">
 		<property name="coreDao">
 			<ref bean="coreDao" />
 		</property>
@@ -195,7 +195,7 @@
 		<property name="executionLimit" value="${aycal.execution.limit}"/>
 	</bean>
 	
-	<bean id="summaryAccCore" scope="prototype" class="com.wmsl.core.SummaryAccCore">
+	<bean id="summaryEqCore" scope="prototype" class="com.wmsl.core.SummaryEqCore">
 		<property name="coreDao">
 			<ref bean="coreDao" />
 		</property>
@@ -211,14 +211,14 @@
 		<property name="stopMonth" value="${stop.month}"/>
 		<property name="stopDay" value="${stop.day}"/>
 		
-		<property name="instrumentCode" value="${summaryacc.instrumentcode}"/>
-		<property name="prefixTx" value="${summaryacc.prefix_tx}"/>
-		<property name="dataFrom" value="${summaryacc.subaccount.from}"/>
-		<property name="dataTo" value="${summaryacc.subaccount.to}"/>
-		<property name="accountLimit" value="${summaryacc.account.limit}"/>
-		<property name="subAccountLimit" value="${summaryacc.subaccount.limit}"/>
-		<property name="outstandingLimit" value="${summaryacc.outstanding.limit}"/>
-		<property name="executionLimit" value="${summaryacc.execution.limit}"/>
+		<property name="instrumentCode" value="${summaryeq.instrumentcode}"/>
+		<property name="prefixTx" value="${summaryeq.prefix_tx}"/>
+		<property name="dataFrom" value="${summaryeq.subaccount.from}"/>
+		<property name="dataTo" value="${summaryeq.subaccount.to}"/>
+		<property name="accountLimit" value="${summaryeq.account.limit}"/>
+		<property name="subAccountLimit" value="${summaryeq.subaccount.limit}"/>
+		<property name="outstandingLimit" value="${summaryeq.outstanding.limit}"/>
+		<property name="executionLimit" value="${summaryeq.execution.limit}"/>
 	</bean>
 	
 	

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.datasource.lookup.DataSourceLookupFailureException;
 import org.springframework.stereotype.Component;
 
 import com.wealth.bwm.common.impl.entity.instrument.Instrument;
@@ -21,9 +22,8 @@ public abstract class GenBigDataInstrumentsCore extends GenBigDataBizCore {
 	@Override
 	public Integer getInstrumentId() {
 
-		int instrumentMaxIndex =  instrumentList.size() - 1;
+		int instrumentMaxIndex =  instrumentList.size();
 		Instrument instrument = instrumentList.get(INSTRUMENT_COUNT % instrumentMaxIndex);
-		
 		INSTRUMENT_COUNT++;
 		return instrument.getInstrumentId();
 	}
@@ -35,8 +35,12 @@ public abstract class GenBigDataInstrumentsCore extends GenBigDataBizCore {
 		this.setInstrumentCode(null);
 		super.afterPropertiesSet();
 		
-		List<Instrument> instrumentList = coreDao.getInstrumentBySymbol(instrumentCode);
+		instrumentList = coreDao.getInstrumentBySymbol(instrumentCode);
 		log.debug(instrumentCode + " : " + instrumentList.size() + " Rows");
+		
+		if(instrumentList.size() <= 0){
+			throw new DataSourceLookupFailureException("instrumentCode : " + instrumentCode + "% Not Found In DB");
+		}
 		
 	}
 	

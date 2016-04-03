@@ -128,6 +128,16 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		this.stopDay = stopDay;
 	}
 
+	public int getStartYear() {
+		return startYear;
+	}
+	public int getStartMonth() {
+		return startMonth;
+	}
+	public int getStartDay() {
+		return startDay;
+	}
+	
 	public void setDataFrom(Integer dataFrom) {
 		this.dataFrom = dataFrom;
 	}

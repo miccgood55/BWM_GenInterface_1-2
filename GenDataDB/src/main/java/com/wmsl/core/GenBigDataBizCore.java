@@ -3,10 +3,8 @@ package com.wmsl.core;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +19,7 @@ import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.Constants;
 import com.wmsl.bean.GenResult;
 import com.wmsl.bean.dao.CustomerInfo;
+import com.wmsl.utils.GenDataDBUtils;
 
 import java.io.BufferedWriter;
 
@@ -34,11 +33,15 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 		BigDecimal big2 = new BigDecimal(div2);
 		return BigDecimal.valueOf(Math.ceil(big1.divide(big2, 2, RoundingMode.HALF_UP).doubleValue())).intValue();
 	}
-
+	
+	public void init() {}
+	
 	@Override
 	public GenResult execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
 		log.debug("Start GenBigDataCore.execute ");
 
+		this.init();
+		
 		Calendar startDate = this.getStartDate();
 		// Calendar stopDate = this.getStopDate();
 
@@ -93,7 +96,6 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 			log.debug(" --------------------------------- ");
 
 			String startDateFormat = sdf.format(startDate.getTime());
-			Random random = new Random();
 			
 			for (CustomerInfo customerInfo : customerList) {
 
@@ -129,69 +131,67 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 						subAccToString(bufferedWriterSubAcc, subAccount);
 
 						genResult.addSubAccountCount();
-						// OutStanding
-						for (int outStandingIndex = 0; outStandingIndex < outstandingPerSubAcc; outStandingIndex++) {
-
-							OutstandingBatch outstanding = null;
-							try{
-								outstanding = getOutstanding();
-							} catch (UnsupportedOperationException e){
-								break;
-							}
-
-							String dateFormat = sdf.format(outStandingDate.getTime());
-
-							
-							setOutstandingValue(outstanding, dateFormat, subAccount);
-
-							outstandingToString(bufferedWriterOutStanding, outstanding);
-							// Position
-							subOutstandingToString(bufferedWriterPosition, outstanding);
-
-							genResult.addOutstandingCount();
-
-							outStandingDate.add(Calendar.DATE, 1);
-						}
 						
-						List<Integer> ls = new ArrayList<Integer>();
-						while (ls.size() == executionPerSubAcc) {
-							int min = 0 , max = 365;
-							int rd = random.nextInt((max - min) + 1) + min;
+						if(outstandingPerSubAcc > 0){
+
+							List<Integer> listOut = this.getOutstandingRandom(outstandingPerSubAcc);
+
+							int listOutSize = listOut.size();
 							
-							if(!ls.contains(rd)){
-								ls.add(rd);
+							// OutStanding
+							for (int outStandingIndex = 0; outStandingIndex < outstandingPerSubAcc; outStandingIndex++) {
+
+								OutstandingBatch outstanding = null;
+								try{
+									outstanding = getOutstanding();
+
+									outStandingDate.set(Calendar.DAY_OF_YEAR, listOut.get(outStandingIndex % listOutSize));
+									String dateFormat = sdf.format(outStandingDate.getTime());
+
+									
+									setOutstandingValue(outstanding, dateFormat, subAccount);
+
+									outstandingToString(bufferedWriterOutStanding, outstanding);
+									// Position
+									subOutstandingToString(bufferedWriterPosition, outstanding);
+
+									genResult.addOutstandingCount();
+									
+								} catch (UnsupportedOperationException e){
+									break;
+								}
 							}
 						}
-						// Execution
-						for (int executionIndex = 0; executionIndex < executionPerSubAcc; executionIndex++) {
 
+						if(executionPerSubAcc > 0){
+							List<Integer> listExec = this.getExecutionRandom(executionPerSubAcc);
+									
+							int listExecSize = listExec.size();
+							// Execution
+							for (int executionIndex = 0; executionIndex < executionPerSubAcc; executionIndex++) {
+	
+								ExecutionBatch execution = null;
+								try{
+									execution = getExecution();
 
-							ExecutionBatch execution = null;
-							try{
-								execution = getExecution();
-							} catch (UnsupportedOperationException e){
-								break;
+									executionDate.set(Calendar.DAY_OF_YEAR, listExec.get(executionIndex % listExecSize));
+									String dateFormat = sdf.format(executionDate.getTime());
+									
+									setExecutionValue(execution, dateFormat, subAccount, getTxSeq(seq++));
+		
+									executionToString(bufferedWriterExe, execution);
+									// Transection
+									subExecutionToString(bufferedWriterTx, execution);
+		
+									genResult.addTransectionCount();
+								} catch (UnsupportedOperationException e){
+									break;
+								}
+								
 							}
-							
-							executionDate.setTime(startDate.getTime());
-							executionDate.add(Calendar.DATE, ls.get(executionIndex));
-							String dateFormat = sdf.format(executionDate.getTime());
-							
-							setExecutionValue(execution, dateFormat, subAccount, getTxSeq(seq++));
-
-							executionToString(bufferedWriterExe, execution);
-							// Transection
-							subExecutionToString(bufferedWriterTx, execution);
-
-							genResult.addTransectionCount();
-							
 						}
-
 					}
-
-//					startDate.add(Calendar.DATE, 1);
 				}
-
 			}
 
 		} catch (IOException e) {
@@ -227,6 +227,14 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 		// return executeFormDataInDB();
 	}
 
+	public List<Integer> getOutstandingRandom(int outstandPerSubAcc) {
+		return GenDataDBUtils.getListInteger(1, 365);
+	}
+	
+	public List<Integer> getExecutionRandom(int executionPerSubAcc) {
+		return GenDataDBUtils.getRandList(executionPerSubAcc, 1, 365);
+	}
+	
 	public long executeFormDataInDB() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
 		log.debug("Start GenBigDataCore.executeFormDataInDB ");
 

@@ -6,7 +6,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,7 @@ import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.OutstandingBatch;
 import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.Constants;
+import com.wmsl.utils.GenDataDBUtils;
 
 @Component
 public class AYCapCore extends GenBigDataInstrumentsCore{
@@ -31,6 +34,40 @@ public class AYCapCore extends GenBigDataInstrumentsCore{
 	private static final BigDecimal FACEVALUE = new BigDecimal(250000).setScale(4, RoundingMode.HALF_UP);
 	private static final BigDecimal INSTALLMENTAMONT = new BigDecimal(4462.62).setScale(4, RoundingMode.HALF_UP);
 	
+	private static List<Integer> LIST_ALL;
+//	private static final int SEND_DATE = 0;
+	@Override
+	public void init() {
+		List<Integer> listMonth = GenDataDBUtils.getListInteger(0, 11);
+		
+		Calendar c = Calendar.getInstance(Locale.ENGLISH);
+		int startYear = this.getStartYear();
+		c.set(startYear, this.getStartMonth(), this.getStartDay());
+		
+		for (Integer month : listMonth) {
+
+			c.set(Calendar.DAY_OF_MONTH, 1);
+			c.set(Calendar.MONTH, month);
+			c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+			LIST_ALL.add(c.get(Calendar.DAY_OF_YEAR));
+		}
+	}
+
+	@Override
+	public List<Integer> getOutstandingRandom(int outstandPerSubAcc) {
+		return LIST_ALL;
+	}
+
+	@Override
+	public List<Integer> getExecutionRandom(int executionPerSubAcc) {
+		List<Integer> listRet = new ArrayList<Integer>(LIST_ALL);
+		
+		Collections.shuffle(listRet);
+		
+		return listRet;
+	}
+
 	/*
 	 * override to modifile
 	 * (non-Javadoc)

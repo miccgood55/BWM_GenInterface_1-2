@@ -45,23 +45,33 @@ public class App {
 
 						long t1 = System.currentTimeMillis();
 
-						Core core = (Core) appContext.getBean(beanName);
-						GenResult genResult = core.execute();
+						try {
 
-						long t2 = System.currentTimeMillis();
+							Core core = (Core) appContext.getBean(beanName);
+							
 
-						logs.add(beanName + " : " + (t2 - t1) / 1000 + " sec");
-						logs.add("Account : " + genResult.getAccountCount() + " Rows");
-						logs.add("SubAccount : " + genResult.getSubAccountCount() + " Rows");
-						logs.add("Outstanding : " + genResult.getOutstandingCount() + " Rows");
-						logs.add("Transection : " + genResult.getTransectionCount() + " Rows");
+							logs.add("Process Name : " + core.getClass().getName());
+							
+							GenResult genResult = core.execute();
 
-						isProcess = true;
+							long t2 = System.currentTimeMillis();
+							logs.add(beanName + " : " + (t2 - t1) / 1000 + " sec");
+							logs.add("Account : " + genResult.getAccountCount() + " Rows");
+							logs.add("SubAccount : " + genResult.getSubAccountCount() + " Rows");
+							logs.add("Outstanding : " + genResult.getOutstandingCount() + " Rows");
+							logs.add("Transection : " + genResult.getTransectionCount() + " Rows");
+
+							isProcess = true;
+						} catch (Exception e) {
+							logs.add(beanName + " Error : " + e.getMessage());
+						}
 					}
 				}
+
+				if (isProcess)
+					logs.add(" ------------------------------------------ ");
+				isProcess = false;
 			}
-			if (isProcess)
-				logs.add(" ----------------------------------- ");
 		}
 
 		BufferedWriter bw = genFilesUtils.getBufferedWriter(Constants.DIR_LOG, "log", Constants.FILENAME_TXT_EXT);
