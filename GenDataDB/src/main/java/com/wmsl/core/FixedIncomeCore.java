@@ -14,12 +14,10 @@ import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.OutstandingBatch;
 
 import com.wealth.bwm.batch.impl.entity.cp.account.AccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.SubAccountBatch;
-import com.wealth.bwm.batch.impl.entity.cp.account.SubBankAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.execution.ExecutionBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.execution.FixedIncomeExecutionBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.FixedIncomeOutstandingBatch;
 
-import com.wealth.bwm.impl.entity.cp.account.SubFixedIncomeAccount;
 import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.Constants;
@@ -64,32 +62,31 @@ public class FixedIncomeCore extends GenBigDataBizCore {
 		bufferedWriter.newLine();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException {
 		
-		Integer dataFrom = getDataFrom();
-		Integer dataTo = getDataTo();
-		List<SubFixedIncomeAccount> subFixedIncomeAccounts;
-		if(dataFrom == null || dataTo == null){
-			subFixedIncomeAccounts = subFixedIncomeAccountDao.getObjectList();
-		} else {
-			subFixedIncomeAccounts = subFixedIncomeAccountDao.getObjectList(dataFrom, dataTo , true, false);
-		}
-		
-
-		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
-		for (SubFixedIncomeAccount subFixedIncomeAccount : subFixedIncomeAccounts) {
-			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
-			subBankAccountBatch.setSubAccountId(subFixedIncomeAccount.getSubAccountId());
-			subBankAccountBatchs.add(subBankAccountBatch);
-		}
-		
-		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
-		return (List<SubAccountBatch>) subAccounts;
+//		Integer dataFrom = getDataFrom();
+//		Integer dataTo = getDataTo();
+//		List<SubFixedIncomeAccount> subFixedIncomeAccounts;
+//		if(dataFrom == null || dataTo == null){
+//			subFixedIncomeAccounts = subFixedIncomeAccountDao.getObjectList();
+//		} else {
+//			subFixedIncomeAccounts = subFixedIncomeAccountDao.getObjectList(dataFrom, dataTo , true, false);
+//		}
+//		
+//
+//		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
+//		for (SubFixedIncomeAccount subFixedIncomeAccount : subFixedIncomeAccounts) {
+//			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
+//			subBankAccountBatch.setSubAccountId(subFixedIncomeAccount.getSubAccountId());
+//			subBankAccountBatchs.add(subBankAccountBatch);
+//		}
+//		
+//		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
+//		return (List<SubAccountBatch>) subAccounts;
 		
 //		List<? extends SubAccount> subAccounts = subFixedIncomeAccounts;
-//		return (List<SubAccount>) subAccounts;
+		return new ArrayList<SubAccountBatch>();
 	}
 	@Override
 	public String getDir(String dir) {
@@ -98,22 +95,22 @@ public class FixedIncomeCore extends GenBigDataBizCore {
 	
 	@Override
 	public String getFilenamePos() {
-		return Constants.FILE_NAME_FIXED_POS + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_FIXED_POS + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameTx() {
-		return Constants.FILE_NAME_FIXED_TX + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_FIXED_TX + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameExecution(){
-		return Constants.FILE_NAME_EXECUTION_FIXED + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_EXECUTION_FIXED + getStartDate().get(Calendar.YEAR);
 	}
 	
 	@Override
 	public String getFilenameOutstanding() {
-		return Constants.FILE_NAME_OUTSTANDING_FIXED + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_OUTSTANDING_FIXED;
 	}
 
 	@Override

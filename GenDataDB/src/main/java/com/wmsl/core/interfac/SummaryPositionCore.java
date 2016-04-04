@@ -2,6 +2,7 @@ package com.wmsl.core.interfac;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -38,14 +39,17 @@ public abstract class SummaryPositionCore extends Core {
 	/*   */
 
 	@Override
-	public GenResult execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
+	public List<GenResult> execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
 		log.debug("Start SummaryPositionCore.execute ");
 
 		long countRecord = 0;
 		List<MarginAccount> marginAccounts = getMarginAccounts();
 
 		if(marginAccounts.size() <= 0 ){
-			return new GenResult().setTotalCount(countRecord);
+			List<GenResult> genResultList = new ArrayList<GenResult> ();
+			genResultList.add(new GenResult().setTotalCount(countRecord));
+			
+			return genResultList;
 		}
 		
 		BufferedWriter bufferedWriter = genFilesUtils.getBufferedWriter(Constants.DIR_MARGIN, getFilename(),
@@ -65,7 +69,10 @@ public abstract class SummaryPositionCore extends Core {
 			bufferedWriter.close();
 		}
 
-		return new GenResult().setTotalCount(countRecord);
+		List<GenResult> genResultList = new ArrayList<GenResult> ();
+		genResultList.add(new GenResult().setTotalCount(countRecord));
+		
+		return genResultList;
 	}
 
 }

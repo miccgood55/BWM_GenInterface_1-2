@@ -18,7 +18,6 @@ import com.wealth.bwm.batch.impl.entity.cp.account.execution.ExecutionBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.DepositOutstandingBacth;
 import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.OutstandingBatch;
 import com.wealth.bwm.impl.dao.cp.account.SubBankAccountDao;
-import com.wealth.bwm.impl.entity.cp.account.SubBankAccount;
 import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.Constants;
@@ -119,67 +118,69 @@ public class DepositCore extends GenBigDataBizCore {
 	}
 	@Override
 	public String getFilenameAcc() {
-		return Constants.FILE_NAME_DEP_ACC + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_DEP_ACC + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameSubAcc() {
-		return Constants.FILE_NAME_DEP_SUBACC + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_DEP_SUBACC + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenamePos() {
-		return Constants.FILE_NAME_DEP_POS + getStopDate().get(Calendar.YEAR);
+//		return Constants.FILE_NAME_DEP_POS + getStartDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_DEP_POS;
 	}
 
 	@Override
 	public String getFilenameTx() {
-		return Constants.FILE_NAME_DEP_TX + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_DEP_TX + getStartDate().get(Calendar.YEAR);
 	}
 	
 	@Override
 	public String getFilenameAccount() {
-		return Constants.FILE_NAME_ACCOUNT_DEPOSIT + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_ACCOUNT_DEPOSIT + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameSubAccount() {
-		return Constants.FILE_NAME_SUBACCOUNT_DEPOSIT + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_SUBACCOUNT_DEPOSIT + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameExecution(){
-		return Constants.FILE_NAME_EXECUTION_DEPOSIT + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_EXECUTION_DEPOSIT + getStartDate().get(Calendar.YEAR);
 	}
 	
 	@Override
 	public String getFilenameOutstanding() {
-		return Constants.FILE_NAME_OUTSTANDING_DEPOSIT + getStopDate().get(Calendar.YEAR);
+//		return Constants.FILE_NAME_OUTSTANDING_DEPOSIT + getStartDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_OUTSTANDING_DEPOSIT;
 	}
 
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException {
 		
-		Integer dataFrom = getDataFrom();
-		Integer dataTo = getDataTo();
-		List<SubBankAccount> subBankAccounts;
-		if(dataFrom == null || dataTo == null){
-			subBankAccounts = subBankAccountDao.getObjectList();
-		} else {
-			subBankAccounts = subBankAccountDao.getObjectList(dataFrom, dataTo , true, false);
-		}
-
-		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
-		for (SubBankAccount subBankAccount : subBankAccounts) {
-			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
-			subBankAccountBatch.setSubAccountId(subBankAccount.getSubAccountId());
-			subBankAccountBatchs.add(subBankAccountBatch);
-		}
+//		Integer dataFrom = getDataFrom();
+//		Integer dataTo = getDataTo();
+//		List<SubBankAccount> subBankAccounts;
+//		if(dataFrom == null || dataTo == null){
+//			subBankAccounts = subBankAccountDao.getObjectList();
+//		} else {
+//			subBankAccounts = subBankAccountDao.getObjectList(dataFrom, dataTo , true, false);
+//		}
+//
+//		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
+//		for (SubBankAccount subBankAccount : subBankAccounts) {
+//			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
+//			subBankAccountBatch.setSubAccountId(subBankAccount.getSubAccountId());
+//			subBankAccountBatchs.add(subBankAccountBatch);
+//		}
+//		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
+//		return (List<SubAccountBatch>) subAccounts;
 		
-		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
-		return (List<SubAccountBatch>) subAccounts;
+		return new ArrayList<SubAccountBatch>();
 	}
 	
 }

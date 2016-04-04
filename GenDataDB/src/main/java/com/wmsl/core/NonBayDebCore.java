@@ -26,7 +26,7 @@ import com.wmsl.utils.GenDataDBUtils;
 @Component
 public class NonBayDebCore extends GenBigDataInstrumentsCore{
 
-	private static List<Integer> LIST_ALL;
+	private static List<Integer> LIST_ALL = new ArrayList<Integer>();
 	private static final int SEND_DATE = 0;
 	@Override
 	public void init() {
@@ -66,7 +66,7 @@ public class NonBayDebCore extends GenBigDataInstrumentsCore{
 	 * @see com.wmsl.core.GenBigDataCore#getAccountNumber(java.lang.String, int)
 	 */
 	@Override
-	public String getAccountNumber(String cifCode, int accountIndex) {
+	public String getAccountNumber(String cifCode, long accountSeq) {
 		return "-";
 	}
 
@@ -182,42 +182,42 @@ public class NonBayDebCore extends GenBigDataInstrumentsCore{
 	}
 	@Override
 	public String getFilenameAcc() {
-		return Constants.FILE_NAME_FIXED_ACC + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_FIXED_ACC + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameSubAcc() {
-		return Constants.FILE_NAME_FIXED_SUBACC + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_FIXED_SUBACC + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenamePos() {
-		return Constants.FILE_NAME_FIXED_POS + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_FIXED_POS;
 	}
 
 	@Override
 	public String getFilenameTx() {
-		return Constants.FILE_NAME_FIXED_TX + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_FIXED_TX + getStartDate().get(Calendar.YEAR);
 	}
 	
 	@Override
 	public String getFilenameAccount() {
-		return Constants.FILE_NAME_ACCOUNT_FIXED + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_ACCOUNT_FIXED + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameSubAccount() {
-		return Constants.FILE_NAME_SUBACCOUNT_FIXED + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_SUBACCOUNT_FIXED + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameExecution(){
-		return Constants.FILE_NAME_EXECUTION_FIXED + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_EXECUTION_FIXED + getStartDate().get(Calendar.YEAR);
 	}
 	
 	@Override
 	public String getFilenameOutstanding() {
-		return Constants.FILE_NAME_OUTSTANDING_FIXED + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_OUTSTANDING_FIXED;
 	}
 
 	@Override

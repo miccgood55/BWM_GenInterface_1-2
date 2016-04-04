@@ -1,13 +1,30 @@
 package com.wmsl.bean;
 
+import java.util.Calendar;
+
 public class GenResult {
 
+	private long time;
+	private Calendar year;
 	private long totalCount;
 	private long accountCount;
 	private long subAccountCount;
 	private long outstandingCount;
 	private long transectionCount;
 	
+	
+	public long getTime() {
+		return time;
+	}
+	public void setTime(long time) {
+		this.time = time;
+	}
+	public Calendar getYear() {
+		return year;
+	}
+	public void setYear(Calendar year) {
+		this.year = year;
+	}
 	public long getTotalCount() {
 		return totalCount;
 	}
@@ -46,5 +63,14 @@ public class GenResult {
 		this.totalCount++;
 	}
 	
+	public void marge(GenResult genResult) {
+
+		this.totalCount += genResult.getTotalCount();
+		this.accountCount += genResult.getAccountCount();
+		this.subAccountCount += genResult.getSubAccountCount();
+		this.outstandingCount += genResult.getOutstandingCount();
+		this.transectionCount += genResult.getTransectionCount();
+		
+	}
 	
 }

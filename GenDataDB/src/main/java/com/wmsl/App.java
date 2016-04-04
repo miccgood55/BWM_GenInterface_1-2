@@ -43,8 +43,6 @@ public class App {
 
 					if (isEnable) {
 
-						long t1 = System.currentTimeMillis();
-
 						try {
 
 							Core core = (Core) appContext.getBean(beanName);
@@ -52,14 +50,23 @@ public class App {
 
 							logs.add("Process Name : " + core.getClass().getName());
 							
-							GenResult genResult = core.execute();
+							List<GenResult> genResultList = core.execute();
 
-							long t2 = System.currentTimeMillis();
-							logs.add(beanName + " : " + (t2 - t1) / 1000 + " sec");
-							logs.add("Account : " + genResult.getAccountCount() + " Rows");
-							logs.add("SubAccount : " + genResult.getSubAccountCount() + " Rows");
-							logs.add("Outstanding : " + genResult.getOutstandingCount() + " Rows");
-							logs.add("Transection : " + genResult.getTransectionCount() + " Rows");
+							
+							for (GenResult genResult : genResultList) {
+
+								logs.add(" ----------------------------- ");
+								logs.add(" ====== " + beanName + " ====== ");
+								logs.add(" === Year : " + genResult.getYear() + " === ");
+								logs.add(" === Time : " + genResult.getTime() + " sec === ");
+								logs.add(" ----------------------------- ");
+								
+								logs.add("Account : " + genResult.getAccountCount() + " Rows");
+								logs.add("SubAccount : " + genResult.getSubAccountCount() + " Rows");
+								logs.add("Outstanding : " + genResult.getOutstandingCount() + " Rows");
+								logs.add("Transection : " + genResult.getTransectionCount() + " Rows");
+								
+							}
 
 							isProcess = true;
 						} catch (Exception e) {

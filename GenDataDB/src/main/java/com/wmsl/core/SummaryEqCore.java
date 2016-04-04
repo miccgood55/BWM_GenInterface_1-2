@@ -38,8 +38,8 @@ public class SummaryEqCore extends GenBigDataBizCore {
 	 * @see com.wmsl.core.GenBigDataCore#getAccountNumber(java.lang.String, int)
 	 */
 	@Override
-	public String getAccountNumber(String cifCode, int accountIndex) {
-		return getAccountNumber(Constants.PREFIX_EQ, cifCode, accountIndex);
+	public String getAccountNumber(String cifCode, long accountSeq) {
+		return getAccountNumber(Constants.PREFIX_EQ, cifCode, accountSeq);
 	}
 
 	public void setSubAccountValue(SubAccountBatch subAccount, String startDateFormat, AccountBatch account, String accountNo) {
@@ -73,12 +73,16 @@ public class SummaryEqCore extends GenBigDataBizCore {
 //		ACCOUNTID *	MARGINTYPE	
 		bufferedWriter.write(prepareData(marginAccount.getAccountId()));bufferedWriter.write(COMMA_STRING);
 		bufferedWriter.write(prepareData(marginAccount.getMarginType()));
+
+		bufferedWriter.newLine();
 	}
 
 	@Override
 	public void subAccToString(BufferedWriter bufferedWriter, SubAccountBatch subAccount) throws IOException {
 		SubMarginAccountBatch subMarginAccount= (SubMarginAccountBatch)subAccount;
 		bufferedWriter.write(prepareData(subMarginAccount.getSubAccountId()));
+
+		bufferedWriter.newLine();
 	}
 
 	@Override
@@ -165,42 +169,42 @@ public class SummaryEqCore extends GenBigDataBizCore {
 	}
 	@Override
 	public String getFilenameAcc() {
-		return Constants.FILE_NAME_MARGIN_ACC + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_MARGIN_ACC + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameSubAcc() {
-		return Constants.FILE_NAME_MARGIN_SUBACC + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_MARGIN_SUBACC + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenamePos() {
-		return Constants.FILE_NAME_MARGIN_POS + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_MARGIN_POS;
 	}
 
 	@Override
 	public String getFilenameTx() {
-		return Constants.FILE_NAME_MARGIN_TX + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_MARGIN_TX + getStartDate().get(Calendar.YEAR);
 	}
 	
 	@Override
 	public String getFilenameAccount() {
-		return Constants.FILE_NAME_ACCOUNT_MARGIN + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_ACCOUNT_MARGIN + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameSubAccount() {
-		return Constants.FILE_NAME_SUBACCOUNT_MARGIN + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_SUBACCOUNT_MARGIN + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameExecution(){
-		return Constants.FILE_NAME_EXECUTION_MARGIN + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_EXECUTION_MARGIN + getStartDate().get(Calendar.YEAR);
 	}
 	
 	@Override
 	public String getFilenameOutstanding() {
-		return Constants.FILE_NAME_OUTSTANDING_MARGIN + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_OUTSTANDING_MARGIN;
 	}
 
 	@SuppressWarnings("unchecked")

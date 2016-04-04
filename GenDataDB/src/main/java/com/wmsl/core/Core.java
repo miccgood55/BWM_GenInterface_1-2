@@ -3,6 +3,7 @@ package com.wmsl.core;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,5 @@ public abstract class Core {
 		this.genFilesUtils = genFilesUtils;
 	}
 
-	public abstract GenResult execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException;
+	public abstract List<GenResult> execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException;
 }

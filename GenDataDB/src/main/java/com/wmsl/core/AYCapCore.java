@@ -34,7 +34,7 @@ public class AYCapCore extends GenBigDataInstrumentsCore{
 	private static final BigDecimal FACEVALUE = new BigDecimal(250000).setScale(4, RoundingMode.HALF_UP);
 	private static final BigDecimal INSTALLMENTAMONT = new BigDecimal(4462.62).setScale(4, RoundingMode.HALF_UP);
 	
-	private static List<Integer> LIST_ALL;
+	private static List<Integer> LIST_ALL = new ArrayList<Integer>();
 //	private static final int SEND_DATE = 0;
 	@Override
 	public void init() {
@@ -78,8 +78,8 @@ public class AYCapCore extends GenBigDataInstrumentsCore{
 	private String prefixAccountName = "ACCOUNT_NAME_AYCAP_";
 	
 	@Override
-	public String getAccountNumber(String cifCode, int accountIndex) {
-		return String.valueOf(accountNo + accountIndex);
+	public String getAccountNumber(String cifCode, long accountSeq) {
+		return String.valueOf(accountNo + accountSeq);
 		
 	}
 
@@ -120,6 +120,7 @@ public class AYCapCore extends GenBigDataInstrumentsCore{
 	
 	@Override
 	public void setOutstandingValue(OutstandingBatch outstanding, String dateFormat, SubAccountBatch subAccount) {
+		super.setOutstandingValue(outstanding, dateFormat, subAccount);
 		outstanding.setMarketValue(MARKETVALUE);
 		outstanding.setLastUpdateBy(2);
 		outstanding.setLastUpdateByName("System");
@@ -230,42 +231,42 @@ public class AYCapCore extends GenBigDataInstrumentsCore{
 	}
 	@Override
 	public String getFilenameAcc() {
-		return Constants.FILE_NAME_LIAB_ACC + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_LIAB_ACC + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameSubAcc() {
-		return Constants.FILE_NAME_LIAB_SUBACC + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_LIAB_SUBACC + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenamePos() {
-		return Constants.FILE_NAME_LIAB_POS + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_LIAB_POS;
 	}
 
 	@Override
 	public String getFilenameTx() {
-		return Constants.FILE_NAME_LIAB_TX + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_LIAB_TX + getStartDate().get(Calendar.YEAR);
 	}
 	
 	@Override
 	public String getFilenameAccount() {
-		return Constants.FILE_NAME_ACCOUNT_LIAB + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_ACCOUNT_LIAB + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameSubAccount() {
-		return Constants.FILE_NAME_SUBACCOUNT_LIAB + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_SUBACCOUNT_LIAB + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameExecution(){
-		return Constants.FILE_NAME_EXECUTION_LIAB + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_EXECUTION_LIAB + getStartDate().get(Calendar.YEAR);
 	}
 	
 	@Override
 	public String getFilenameOutstanding() {
-		return Constants.FILE_NAME_OUTSTANDING_LIAB + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_OUTSTANDING_LIAB;
 	}
 
 	@SuppressWarnings("unchecked")

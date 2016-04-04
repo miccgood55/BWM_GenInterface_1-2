@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -35,19 +36,21 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	private static int EXECUTION_NEXT_ID;
 	private static Integer INSTRUMENT_ID;
 
-	private int startYear;
+	private int yearIndex;
+	
+	private List<Integer> startYear = new ArrayList<Integer>();
 	private int startMonth;
 	private int startDay;
-	private int stopYear;
+	private List<Integer> stopYear = new ArrayList<Integer>();
 	private int stopMonth;
 	private int stopDay;
-	private Integer dataFrom;
-	private Integer dataTo;
+//	private Integer dataFrom;
+//	private Integer dataTo;
 
-	private Integer accountLimit;
-	private Integer subAccountLimit;
-	private Integer outstandingLimit;
-	private Integer executionLimit;
+	private List<Integer> accountLimitList = new ArrayList<Integer>();
+	private List<Integer> subAccountLimitList = new ArrayList<Integer>();
+	private List<Integer> outstandingLimitList = new ArrayList<Integer>();
+	private List<Integer> executionLimitList = new ArrayList<Integer>();
 	
 	protected final static String COMMA_STRING = ",";
 	protected final static String DOUBLE_C = "\"";
@@ -108,9 +111,24 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	public Integer getInstrumentId() {
 		return INSTRUMENT_ID;
 	}
-
-	public void setStartYear(int startYear) {
-		this.startYear = startYear;
+	
+	public int getYearIndex() {
+		return yearIndex;
+	}
+	public void setyYearIndex(int yearIndex) {
+		this.yearIndex = yearIndex;
+	}
+	
+	public void setStartYear(String startYear) {
+		
+		String[] startYears = startYear.split("\\|");
+		
+		log.debug("Process Start Year");
+		for (int i = 0; i < startYears.length; i++) {
+			String startYearStr = startYears[i];
+			log.debug(startYearStr);
+			this.startYear.add(Integer.valueOf(startYearStr));
+		}
 	}
 	public void setStartMonth(int startMonth) {
 		this.startMonth = startMonth;
@@ -118,8 +136,15 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	public void setStartDay(int startDay) {
 		this.startDay = startDay;
 	}
-	public void setStopYear(int stopYear) {
-		this.stopYear = stopYear;
+	public void setStopYear(String stopYear) {
+		String[] stopYears = stopYear.split("\\|");
+		
+		log.debug("Process Stop Year");
+		for (int i = 0; i < stopYears.length; i++) {
+			String stopYearStr = stopYears[i];
+			log.debug(stopYearStr);
+			this.stopYear.add(Integer.valueOf(stopYearStr));
+		}
 	}
 	public void setStopMonth(int stopMonth) {
 		this.stopMonth = stopMonth;
@@ -128,8 +153,12 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		this.stopDay = stopDay;
 	}
 
+	public int getStartYearSize() {
+		return this.startYear.size();
+	}
+
 	public int getStartYear() {
-		return startYear;
+		return this.startYear.get(getYearIndex());
 	}
 	public int getStartMonth() {
 		return startMonth;
@@ -137,54 +166,83 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	public int getStartDay() {
 		return startDay;
 	}
+
+	public int getStopYear() {
+		return this.stopYear.get(getYearIndex());
+	}
+	public int getStopMonth() {
+		return stopMonth;
+	}
+	public int getStopDay() {
+		return stopDay;
+	}
 	
-	public void setDataFrom(Integer dataFrom) {
-		this.dataFrom = dataFrom;
-	}
-	public Integer getDataFrom() {
-		return this.dataFrom;
-	}
-	public void setDataTo(Integer dataTo) {
-		this.dataTo = dataTo;
-	}
-	public Integer getDataTo() {
-		return this.dataTo;
-	}
 	public Integer getAccountLimit() {
-		return accountLimit;
-	}
-	public void setAccountLimit(Integer accountLimit) {
-		this.accountLimit = accountLimit;
-	}
-	public Integer getSubAccountLimit() {
-		return subAccountLimit;
-	}
-	public void setSubAccountLimit(Integer subAccountLimit) {
-		this.subAccountLimit = subAccountLimit;
-	}
-	public Integer getOutstandingLimit() {
-		return outstandingLimit;
+		return this.accountLimitList.get(getYearIndex());
 	}
 
-	public void setOutstandingLimit(Integer outstandingLimit) {
-		this.outstandingLimit = outstandingLimit;
+	public Integer getSubAccountLimit() {
+		return subAccountLimitList.get(getYearIndex());
+	}
+
+	public Integer getOutstandingLimit() {
+		return outstandingLimitList.get(getYearIndex());
 	}
 
 	public Integer getExecutionLimit() {
-		return executionLimit;
+		return executionLimitList.get(getYearIndex());
 	}
 
-	public void setExecutionLimit(Integer executionLimit) {
-		this.executionLimit = executionLimit;
+	public void setAccountLimit(String accountLimit) {
+		String[] accountLimits = accountLimit.split("\\|");
+		
+		log.debug("Process AccountLimit Year");
+		for (int i = 0; i < accountLimits.length; i++) {
+			String accountLimitStr = accountLimits[i];
+			log.debug(accountLimitStr);
+			this.accountLimitList.add(Integer.valueOf(accountLimitStr));
+		}
+	}
+	public void setSubAccountLimit(String subAccountLimit) {
+		String[] subAccountLimits = subAccountLimit.split("\\|");
+		
+		log.debug("Process SubAccountLimit Year");
+		for (int i = 0; i < subAccountLimits.length; i++) {
+			String subAccountLimitStr = subAccountLimits[i];
+			log.debug(subAccountLimitStr);
+			this.subAccountLimitList.add(Integer.valueOf(subAccountLimitStr));
+		}
+	}
+
+	public void setOutstandingLimit(String outstandingLimit) {
+		String[] outstandingLimits = outstandingLimit.split("\\|");
+		
+		log.debug("Process OutstandingLimit Year");
+		for (int i = 0; i < outstandingLimits.length; i++) {
+			String outstandingLimitStr = outstandingLimits[i];
+			log.debug(outstandingLimitStr);
+			this.outstandingLimitList.add(Integer.valueOf(outstandingLimitStr));
+		}
+	}
+	
+	public void setExecutionLimit(String executionLimit) {
+		String[] executionLimits = executionLimit.split("\\|");
+		
+		log.debug("Process ExecutionLimit Year");
+		for (int i = 0; i < executionLimits.length; i++) {
+			String executionLimitStr = executionLimits[i];
+			log.debug(executionLimitStr);
+			this.executionLimitList.add(Integer.valueOf(executionLimitStr));
+		}
 	}
 
 	public Calendar getStartDate() {
-		return GenDataDBUtils.getCalendar(startYear, startMonth, startDay);
+		return GenDataDBUtils.getCalendar(getStartYear(), startMonth, startDay);
 	}
 
-	public Calendar getStopDate() {
-		return GenDataDBUtils.getCalendar(stopYear, stopMonth, stopDay);
-	}
+//	public Calendar getStopDate() {
+//		return GenDataDBUtils.getCalendar(getStopYear(), stopMonth, stopDay);
+//	}
 	
 	private String instrumentCode;
 	public void setInstrumentCode(String instrumentCode) {
@@ -262,12 +320,12 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		
 	}
 
-	public String getAccountNumber(String cifCode, int accountIndex) {
-		return getAccountNumber("ACC_", cifCode, accountIndex);
+	public String getAccountNumber(String cifCode, long accountSeq) {
+		return getAccountNumber("ACC_", cifCode, accountSeq);
 	}
 	
-	public String getAccountNumber(String prefix, String cifCode, int accountIndex) {
-		return new StringBuilder(prefix).append(cifCode).append("_").append(String.format("%02d", accountIndex)).toString();
+	public String getAccountNumber(String prefix, String cifCode, long accountSeq) {
+		return new StringBuilder(prefix).append(cifCode).append("_").append(String.format("%02d", accountSeq)).toString();
 	}
 	
 	public void setAccountValue(AccountBatch account, String startDateFormat, String accountNumber) {
@@ -356,8 +414,11 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 //		bufferedWriter.write(prepareData(subAccount.getRemark()));bufferedWriter.write(COMMA_STRING);
 //		bufferedWriter.write(prepareData(subAccount.getIssueDate()));bufferedWriter.write(COMMA_STRING);
 		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
-		bufferedWriter.write(prepareData(subAccount.getIsActive()));bufferedWriter.write(COMMA_STRING);
+		bufferedWriter.write(prepareData(subAccount.getIsActive()));
+//		bufferedWriter.write(COMMA_STRING);
 		bufferedWriter.write(COMMA_STRING + COMMA_STRING + 'N');
+
+		bufferedWriter.newLine();
 	
 	}
 	
@@ -389,10 +450,12 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 
 		bufferedWriter.write(prepareData(account.getBranchId()) + COMMA_STRING);
 		bufferedWriter.write(prepareData(account.getSource()) + COMMA_STRING);
-		bufferedWriter.write(prepareData(account.getAccountNameOther()));bufferedWriter.write(COMMA_STRING);
+		bufferedWriter.write(prepareData(account.getAccountNameOther()));//bufferedWriter.write(COMMA_STRING);
 
 //		ISPRIVATEFUND	REFERENCEPRIVATEFUND
 		bufferedWriter.write(COMMA_STRING + COMMA_STRING);
+
+		bufferedWriter.newLine();
 	
 	}
 	
@@ -405,13 +468,9 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		bufferedWriter.write(prepareData(outstanding.getOutstandingDate()));bufferedWriter.write(COMMA_STRING);
 //		bufferedWriter.write(prepareData(outstanding.getExternalId()) + COMMA_STRING);
 //		bufferedWriter.write(prepareData(outstanding.getExternalSequenceNo()) + COMMA_STRING);
-		bufferedWriter.write(COMMA_STRING);bufferedWriter.write(COMMA_STRING);
-		
 //		bufferedWriter.write(prepareData(outstanding.getPortfolio().getPortfolioId())+ COMMA_STRING);
-		bufferedWriter.write(COMMA_STRING);
-		
 //		bufferedWriter.write(prepareData(outstanding.getBaseCurrency()) + COMMA_STRING);
-		bufferedWriter.write(COMMA_STRING);
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING + COMMA_STRING);
 		bufferedWriter.write(prepareData(outstanding.getUnit()) + COMMA_STRING);
 //		bufferedWriter.write(prepareData(outstanding.getCostPerUnit()) + COMMA_STRING);
 //		bufferedWriter.write(prepareData(outstanding.getCostValue()) + COMMA_STRING);
@@ -437,8 +496,7 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 //		bufferedWriter.write(prepareData(outstanding.getProductType()) + COMMA_STRING);
 //		bufferedWriter.write(prepareData(outstanding.getUnitHolder()) + COMMA_STRING);
 // 		bufferedWriter.write(prepareData(depO.getInstrument().getInstrumentId()) + COMMA_STRING);
-		bufferedWriter.write(COMMA_STRING + COMMA_STRING);
-		bufferedWriter.write(COMMA_STRING + COMMA_STRING);
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING + COMMA_STRING);
 		
 		bufferedWriter.write(prepareData(outstanding.getAccountSubType()) + COMMA_STRING);
 		
@@ -471,15 +529,14 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 //		bufferedWriter.write(prepareData(outstanding.getHoldAllFundFlag()) + COMMA_STRING);
 //		bufferedWriter.write(prepareData(outstanding.getHoldAmount()) + COMMA_STRING);
 //		bufferedWriter.write(prepareData(outstanding.getLocalUnrealizedGL()) + COMMA_STRING);
-		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
-		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
-		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
-		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
-		bufferedWriter.write(COMMA_STRING + COMMA_STRING);
-		
 //		bufferedWriter.write(prepareData(outstanding.getUnrealizedGLExchangeRate()) + COMMA_STRING);
 //		bufferedWriter.write(prepareData(outstanding.getUnrealizedGLExchangeDate()));
-		bufferedWriter.write(COMMA_STRING);
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
+		bufferedWriter.write(COMMA_STRING + COMMA_STRING + COMMA_STRING);
+		
 
 		bufferedWriter.newLine();
 		// bufferedWriter.flush();

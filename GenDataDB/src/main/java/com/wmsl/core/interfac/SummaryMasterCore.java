@@ -2,6 +2,7 @@ package com.wmsl.core.interfac;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -35,14 +36,17 @@ public class SummaryMasterCore extends Core {
 	}
 
 	@Override
-	public GenResult execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
+	public List<GenResult> execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
 		log.debug("Start SummaryMasterCore.execute ");
 
 		long countRecord = 0;
 		List<CustomerInfo> customerInfos = getCustomers();
 
 		if (customerInfos.size() <= 0) {
-			return new GenResult().setTotalCount(countRecord);
+			List<GenResult> genResultList = new ArrayList<GenResult> ();
+			genResultList.add(new GenResult().setTotalCount(countRecord));
+			
+			return genResultList;
 		}
 
 		BufferedWriter bufferedWriterEq = genFilesUtils.getBufferedWriter(Constants.DIR_MARGIN, getFilenameEq(), Constants.FILENAME_TXT_EXT);
@@ -80,7 +84,10 @@ public class SummaryMasterCore extends Core {
 			bufferedWriterDeri.close();
 		}
 
-		return new GenResult().setTotalCount(countRecord);
+		List<GenResult> genResultList = new ArrayList<GenResult> ();
+		genResultList.add(new GenResult().setTotalCount(countRecord));
+		
+		return genResultList;
 	}
 
 	public void writeSummaryMaster(BufferedWriter bufferedWriter, SummaryMaster equity) throws IOException {

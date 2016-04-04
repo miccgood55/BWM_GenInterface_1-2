@@ -9,10 +9,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.wealth.bwm.impl.entity.cp.account.SubUnitTrustAccount;
 import com.wealth.bwm.batch.impl.entity.cp.account.AccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.SubAccountBatch;
-import com.wealth.bwm.batch.impl.entity.cp.account.SubBankAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.SubUnitTrustAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.UnitTrustAccountBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.execution.ExecutionBatch;
@@ -43,6 +41,8 @@ public class UnitHolderCore extends GenBigDataBizCore {
 		bufferedWriter.write(prepareData(unitTrustAccount.getAccountId()));bufferedWriter.write(COMMA_STRING);
 		bufferedWriter.write(prepareData(unitTrustAccount.getFinancialTypeId()) + COMMA_STRING);
 		bufferedWriter.write(COMMA_STRING);
+
+		bufferedWriter.newLine();
 	}
 
 	@Override
@@ -50,6 +50,8 @@ public class UnitHolderCore extends GenBigDataBizCore {
 		SubUnitTrustAccountBatch subUnitTrustAccount = (SubUnitTrustAccountBatch)subAccount;
 
 		bufferedWriter.write(prepareData(subUnitTrustAccount.getSubAccountId()));
+
+		bufferedWriter.newLine();
 	}
 
 	@Override
@@ -108,70 +110,68 @@ public class UnitHolderCore extends GenBigDataBizCore {
 	}
 	@Override
 	public String getFilenameAcc() {
-		return Constants.FILE_NAME_UT_ACC + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_UT_ACC + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameSubAcc() {
-		return Constants.FILE_NAME_UT_SUBACC + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_UT_SUBACC + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenamePos() {
-		return Constants.FILE_NAME_UT_POS + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_UT_POS;
 	}
 
 	@Override
 	public String getFilenameTx() {
-		return Constants.FILE_NAME_UT_TX + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_UT_TX + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameAccount() {
-		return Constants.FILE_NAME_ACCOUNT_UNITTRUST + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_ACCOUNT_UNITTRUST + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameSubAccount() {
-		return Constants.FILE_NAME_SUBACCOUNT_UNITTRUST + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_SUBACCOUNT_UNITTRUST + getStartDate().get(Calendar.YEAR);
 	}
 
 	@Override
 	public String getFilenameOutstanding() {
-		return Constants.FILE_NAME_OUTSTANDING_UNITTRUST + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_OUTSTANDING_UNITTRUST;
 	}
 	
 	@Override
 	public String getFilenameExecution(){
-		return Constants.FILE_NAME_EXECUTION_UNITTRUST + getStopDate().get(Calendar.YEAR);
+		return Constants.FILE_NAME_EXECUTION_UNITTRUST + getStartDate().get(Calendar.YEAR);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<SubAccountBatch> getSubAccountDB() throws InfoEntityServiceException, ServerEntityServiceException {
 		
-
-		Integer dataFrom = getDataFrom();
-		Integer dataTo = getDataTo();
-		List<SubUnitTrustAccount> subUnitTrustAccounts;
-		if(dataFrom == null || dataTo == null){
-			subUnitTrustAccounts = subUnitTrustAccountDao.getObjectList();
-		} else {
-			subUnitTrustAccounts = subUnitTrustAccountDao.getObjectList(dataFrom, dataTo , true, false);
-		}
-
-		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
-		for (SubUnitTrustAccount subUnitTrustAccount : subUnitTrustAccounts) {
-			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
-			subBankAccountBatch.setSubAccountId(subUnitTrustAccount.getSubAccountId());
-			subBankAccountBatchs.add(subBankAccountBatch);
-		}
-		
-		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
-		return (List<SubAccountBatch>) subAccounts;
+//		Integer dataFrom = getDataFrom();
+//		Integer dataTo = getDataTo();
+//		List<SubUnitTrustAccount> subUnitTrustAccounts;
+//		if(dataFrom == null || dataTo == null){
+//			subUnitTrustAccounts = subUnitTrustAccountDao.getObjectList();
+//		} else {
+//			subUnitTrustAccounts = subUnitTrustAccountDao.getObjectList(dataFrom, dataTo , true, false);
+//		}
+//
+//		List<SubAccountBatch> subBankAccountBatchs = new ArrayList<SubAccountBatch>();
+//		for (SubUnitTrustAccount subUnitTrustAccount : subUnitTrustAccounts) {
+//			SubBankAccountBatch subBankAccountBatch = new SubBankAccountBatch();
+//			subBankAccountBatch.setSubAccountId(subUnitTrustAccount.getSubAccountId());
+//			subBankAccountBatchs.add(subBankAccountBatch);
+//		}
+//		
+//		List<? extends SubAccountBatch> subAccounts = subBankAccountBatchs;
+//		return (List<SubAccountBatch>) subAccounts;
 		
 //		List<? extends SubAccount> subAccounts = subUnitTrustAccounts;
-//		return (List<SubAccount>) subAccounts;
+		return new ArrayList<SubAccountBatch>();
 	}
 
 }
