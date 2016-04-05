@@ -19,6 +19,7 @@ import com.wealth.bwm.batch.impl.entity.cp.account.execution.ExecutionBatch;
 import com.wealth.bwm.batch.impl.entity.cp.account.outstanding.OutstandingBatch;
 import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
+import com.wmsl.bean.dao.CustomerInfo;
 import com.wmsl.utils.GenDataDBUtils;
 
 @Component
@@ -35,6 +36,7 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	private static int OUTSTANDING_NEXT_ID;
 	private static int EXECUTION_NEXT_ID;
 	private static Integer INSTRUMENT_ID;
+	private static List<CustomerInfo> CUSTOMER_LIST;
 
 	private int yearIndex;
 	
@@ -46,6 +48,7 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	private int stopDay;
 //	private Integer dataFrom;
 //	private Integer dataTo;
+
 
 	private List<Integer> accountLimitList = new ArrayList<Integer>();
 	private List<Integer> subAccountLimitList = new ArrayList<Integer>();
@@ -92,6 +95,11 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 		return 1;
 	}
 	
+
+	public List<CustomerInfo> getCustomerList() {
+		return CUSTOMER_LIST;
+	}
+	
 	public int getNextAccountId() {
 		return ACCOUNT_NEXT_ID++;
 	}
@@ -115,10 +123,12 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	public int getYearIndex() {
 		return yearIndex;
 	}
-	public void setyYearIndex(int yearIndex) {
+	public void setYearIndex(int yearIndex) {
 		this.yearIndex = yearIndex;
 	}
-	
+	public void setYearIndex(String yearIndex) {
+		this.yearIndex = this.startYear.indexOf(Integer.valueOf(yearIndex));
+	}
 	public void setStartYear(String startYear) {
 		
 		String[] startYears = startYear.split("\\|");
@@ -178,18 +188,31 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	}
 	
 	public Integer getAccountLimit() {
+		if(accountLimitList.size() <= getYearIndex()){
+			return 0;
+		}
 		return this.accountLimitList.get(getYearIndex());
 	}
 
 	public Integer getSubAccountLimit() {
+		if(subAccountLimitList.size() <= getYearIndex()){
+			return 0;
+		}
 		return subAccountLimitList.get(getYearIndex());
 	}
 
 	public Integer getOutstandingLimit() {
+
+		if(outstandingLimitList.size() <= getYearIndex()){
+			return 0;
+		}
 		return outstandingLimitList.get(getYearIndex());
 	}
 
 	public Integer getExecutionLimit() {
+		if(executionLimitList.size() <= getYearIndex()){
+			return 0;
+		}
 		return executionLimitList.get(getYearIndex());
 	}
 
@@ -262,10 +285,19 @@ public abstract class GenBigDataCore extends Core implements InitializingBean {
 	protected String getTxSeq(long seq){
 		return new StringBuilder(prefixTx).append(seq).toString();
 	}
+
+    public List<CustomerInfo> queryCustomerListFromDB() throws Exception {
+    	return coreDao.getPersonCustomerByFirstNameEn("NAME_P");
+	}
 	
 	@Override
     public void afterPropertiesSet() throws Exception {
 		log.debug(" === PostGenDataCore === ");
+		
+
+		if(CUSTOMER_LIST == null){
+			CUSTOMER_LIST = queryCustomerListFromDB();
+		}
 		
 		if(ACCOUNT_NEXT_ID == 0){
 			Integer accountId = coreDao.getNextAccountId();

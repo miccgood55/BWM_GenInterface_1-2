@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -16,6 +17,7 @@ import com.wealth.exception.dao.InfoEntityServiceException;
 import com.wealth.exception.dao.ServerEntityServiceException;
 import com.wmsl.bean.GenResult;
 import com.wmsl.core.Core;
+import com.wmsl.core.GenBigDataCore;
 import com.wmsl.utils.GenFilesUtils;
 
 public class App {
@@ -33,56 +35,74 @@ public class App {
 		List<String> beanList = getPropertyList(config, "beanlist");
 
 		List<String> logs = new ArrayList<String>();
-		for (String beanNames : beanList) {
-			boolean isProcess = false;
-			for (String beanName : beanNames.split("\\|")) {
-				if (beanName != null && !beanName.equals("")) {
 
-					String isEnableKey = String.valueOf(config.get(beanName));
-					boolean isEnable = Boolean.valueOf((String) config.get(isEnableKey));
+		String startYearConfig = String.valueOf(config.get("start.year"));
 
-					if (isEnable) {
+		long t1 = System.currentTimeMillis();
+		
+		for (String startYear : startYearConfig.split("\\|")) {
 
-						try {
+			for (String beanNames : beanList) {
+				boolean isProcess = false;
+				for (String beanName : beanNames.split("\\|")) {
+					if (beanName != null && !beanName.equals("")) {
+						String isEnableKey = String.valueOf(config.get(beanName));
+						boolean isEnable = Boolean.valueOf((String) config.get(isEnableKey));
+						if (isEnable) {
 
-							Core core = (Core) appContext.getBean(beanName);
-							
+							try {
 
-							logs.add("Process Name : " + core.getClass().getName());
-							
-							List<GenResult> genResultList = core.execute();
+								Core core = (Core) appContext.getBean(beanName);
 
-							
-							for (GenResult genResult : genResultList) {
+								logs.add("Process Name : " + core.getClass().getName());
 
-								logs.add(" ----------------------------- ");
-								logs.add(" ====== " + beanName + " ====== ");
-								logs.add(" === Year : " + genResult.getYear() + " === ");
-								logs.add(" === Time : " + genResult.getTime() + " sec === ");
-								logs.add(" ----------------------------- ");
+								if(core instanceof GenBigDataCore){
+									((GenBigDataCore)core).setYearIndex(startYear);
+								}
 								
-								logs.add("Account : " + genResult.getAccountCount() + " Rows");
-								logs.add("SubAccount : " + genResult.getSubAccountCount() + " Rows");
-								logs.add("Outstanding : " + genResult.getOutstandingCount() + " Rows");
-								logs.add("Transection : " + genResult.getTransectionCount() + " Rows");
-								
+								GenResult genResult = core.execute();
+
+//								for (GenResult genResult : genResultList) {
+
+									logs.add(" ----------------------------- ");
+									logs.add(" ====== " + beanName + " ====== ");
+									logs.add(" === Year : " + genResult.getYear().getTime() + " === ");
+									logs.add(" === Time : " + genResult.getTime() + " sec === ");
+									logs.add(" ----------------------------- ");
+
+									logs.add("Account : " + genResult.getAccountCount() + " Rows");
+									logs.add("SubAccount : " + genResult.getSubAccountCount() + " Rows");
+									logs.add("Outstanding : " + genResult.getOutstandingCount() + " Rows");
+									logs.add("Transection : " + genResult.getTransectionCount() + " Rows");
+
+//								}
+
+								isProcess = true;
+							} catch (Exception e) {
+								logs.add(beanName + " Error : " + e.getMessage());
+								logs.add(beanName + " Stack : " + ExceptionUtils.getStackTrace(e));
+								logger.error(beanName, "", e);
+
 							}
-
-							isProcess = true;
-						} catch (Exception e) {
-							logs.add(beanName + " Error : " + e.getMessage());
 						}
 					}
-				}
 
-				if (isProcess)
-					logs.add(" ------------------------------------------ ");
-				isProcess = false;
+					if (isProcess)
+						logs.add(" ------------------------------------------ ");
+					isProcess = false;
+				}
 			}
 		}
 
-		BufferedWriter bw = genFilesUtils.getBufferedWriter(Constants.DIR_LOG, "log", Constants.FILENAME_TXT_EXT);
+		long t2 = System.currentTimeMillis();
 		
+//		genResult.setTime((t2 - t1) / 1000);
+
+		logs.add(" === Total Time : " + (t2 - t1) / 1000 / 60 + " min === ");
+		
+
+		BufferedWriter bw = genFilesUtils.getBufferedWriter(Constants.DIR_LOG, "log", Constants.FILENAME_TXT_EXT);
+
 		logger.debug(" =================================== ");
 
 		for (String log : logs) {

@@ -2,7 +2,6 @@ package com.wmsl.core.interfac;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -41,7 +40,7 @@ public abstract class AYPositionCore extends Core {
 	public abstract List<Instrument> getInstruments();
 
 	@Override
-	public List<GenResult> execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
+	public GenResult execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
 		log.debug("Start AYPositionCore.execute ");
 
 		long countRecord = 0;
@@ -53,10 +52,10 @@ public abstract class AYPositionCore extends Core {
 
 		if (customerSize <= 0 || instrumentSize <= 0) {
 
-			List<GenResult> genResultList = new ArrayList<GenResult> ();
-			genResultList.add(new GenResult().setTotalCount(countRecord));
+//			List<GenResult> genResultList = new ArrayList<GenResult> ();
+//			genResultList.add(new GenResult().setTotalCount(countRecord));
 			
-			return genResultList;
+			return new GenResult().setTotalCount(countRecord);
 		}
 
 		BufferedWriter bufferedWriter = genFilesUtils.getBufferedWriter(getDir(), getFilename(),
@@ -87,10 +86,10 @@ public abstract class AYPositionCore extends Core {
 			bufferedWriter.close();
 		}
 
-		List<GenResult> genResultList = new ArrayList<GenResult> ();
-		genResultList.add(new GenResult().setTotalCount(countRecord));
+//		List<GenResult> genResultList = new ArrayList<GenResult> ();
+//		genResultList.add(new GenResult().setTotalCount(countRecord));
 		
-		return genResultList;
+		return new GenResult().setTotalCount(countRecord);
 	}
 
 	public abstract void writeAYPosition(BufferedWriter bufferedWriter, AYPosition ayPosition) throws IOException;

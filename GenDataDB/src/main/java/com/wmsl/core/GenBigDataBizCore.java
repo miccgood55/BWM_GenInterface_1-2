@@ -3,10 +3,12 @@ package com.wmsl.core;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +32,9 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 
 	private static final Logger log = LoggerFactory.getLogger(GenBigDataBizCore.class);
 
-	private Map<Integer, BufferedWriter> bufferedWriterPositionMap;
-	private Map<Integer, BufferedWriter> bufferedWriterOutStandingMap;
+	private Map<String, BufferedWriter> bufferedWriterPositionMap = new HashMap<String, BufferedWriter>();
+	private Map<String, BufferedWriter> bufferedWriterOutStandingMap = new HashMap<String, BufferedWriter>();;
+	private Map<Date, String> bufferedWriterDateMap = new HashMap<Date, String>();;
 	
 	private int getDiv(Integer div1, Integer div2) {
 		BigDecimal big1 = new BigDecimal(div1);
@@ -43,15 +46,15 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 	}
 
 	@Override
-	public List<GenResult> execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
+	public GenResult execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
 
 		log.debug("Start " + this.getClass().getName());
-		List<GenResult> genResultList = new ArrayList<GenResult>();
+//		List<GenResult> genResultList = new ArrayList<GenResult>();
 		
-		int startYearSize = this.getStartYearSize();
+//		int startYearSize = this.getStartYearSize();
 		
-		for (int yearIndex = 0; yearIndex < startYearSize; yearIndex++) {
-			this.setyYearIndex(yearIndex);
+//		for (int yearIndex = 0; yearIndex < startYearSize; yearIndex++) {
+//			this.setYearIndex(yearIndex);
 
 			long t1 = System.currentTimeMillis();
 			
@@ -60,18 +63,18 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 			long t2 = System.currentTimeMillis();
 			
 			genResult.setTime((t2 - t1) / 1000);
-			genResultList.add(genResult);
-		}
+//			genResultList.add(genResult);
+//		}
 		
-		return genResultList;
+		return genResult;
 	}
 
 
-	public Integer getCurrentYearMonth(Calendar calendar) {
+	public String getCurrentYearMonth(Calendar calendar) {
 		int year = calendar.get(Calendar.YEAR);
 		int month = calendar.get(Calendar.MONTH) + 1;
 		
-		return year + month;
+		return year + "_" +  month;
 	}
 	
 	public GenResult executeDetail() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
@@ -107,14 +110,16 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 		
 		GenResult genResult = new GenResult();
 		genResult.setYear(startDate);
-		
+
+		Date startDateD = startDate.getTime();
+		log.debug("Start Date : " + startDateD);
 		
 		try {
 
 			long accountSeq = 0;
 			long seq = 100000000;
 
-			List<CustomerInfo> customerList = coreDao.getPersonCustomerByFirstNameEn("NAME_P");
+			List<CustomerInfo> customerList = getCustomerList();
 
 			log.debug("customer : " + customerList.size() + " Rows ");
 			log.debug("AccountLimit : " + getAccountLimit() + " Rows ");
@@ -136,7 +141,7 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 
 			log.debug(" --------------------------------- ");
 
-			String startDateFormat = sdf.format(startDate.getTime());
+			String startDateFormat = sdf.format(startDateD);
 
 			for (CustomerInfo customerInfo : customerList) {
 
@@ -163,10 +168,10 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 						setSubAccountValue(subAccount, startDateFormat, account, accNo);
 
 						Calendar outStandingDate = Calendar.getInstance();
-						outStandingDate.setTime(startDate.getTime());
+						outStandingDate.setTime(startDateD);
 
 						Calendar executionDate = Calendar.getInstance();
-						executionDate.setTime(startDate.getTime());
+						executionDate.setTime(startDateD);
 
 						subAccountToString(bufferedWriterSubAccount, subAccount);
 						subAccToString(bufferedWriterSubAcc, subAccount);
@@ -187,10 +192,9 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 									outstanding = getOutstanding();
 
 									outStandingDate.set(Calendar.DAY_OF_YEAR, listOut.get(outStandingIndex % listOutSize));
-									String dateFormat = sdf.format(outStandingDate.getTime());
+									String dateFormat = getDateFromMap(bufferedWriterDateMap, outStandingDate);//sdf.format(outStandingDate.getTime());
 									
-
-									Integer outstandingYearMonth = getCurrentYearMonth(outStandingDate);
+									String outstandingYearMonth = getCurrentYearMonth(outStandingDate);
 									
 
 									BufferedWriter bufferedWriterOutStanding = getBufferedWriterFromMap(bufferedWriterOutStandingMap, 
@@ -228,8 +232,9 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 									execution = getExecution();
 
 									executionDate.set(Calendar.DAY_OF_YEAR, listExec.get(executionIndex % listExecSize));
-									String dateFormat = sdf.format(executionDate.getTime());
-
+//									String dateFormat = sdf.format(executionDate.getTime());
+									String dateFormat = getDateFromMap(bufferedWriterDateMap, outStandingDate);//sdf.format(outStandingDate.getTime());
+											
 									setExecutionValue(execution, dateFormat, subAccount, getTxSeq(seq++));
 
 									executionToString(bufferedWriterExe, execution);
@@ -257,6 +262,13 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 			bufferedWriterSubAccount.flush();
 			bufferedWriterSubAccount.close();
 
+			
+			for (Entry<String, BufferedWriter> entry : bufferedWriterOutStandingMap.entrySet()) {
+
+				BufferedWriter bufferedWriterOutStanding = entry.getValue();
+				bufferedWriterOutStanding.flush();
+				bufferedWriterOutStanding.close();
+			}
 //			bufferedWriterOutStandingMap.flush();
 //			bufferedWriterOutStandingMap.close();
 
@@ -269,6 +281,14 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 			bufferedWriterSubAcc.flush();
 			bufferedWriterSubAcc.close();
 
+
+			for (Entry<String, BufferedWriter> entry : bufferedWriterPositionMap.entrySet()) {
+
+				BufferedWriter bufferedWriterPosition = entry.getValue();
+				bufferedWriterPosition.flush();
+				bufferedWriterPosition.close();
+			}
+			
 //			bufferedWriterPositionMap.flush();
 //			bufferedWriterPositionMap.close();
 
@@ -280,13 +300,10 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 		// return executeFormDataInDB();
 	}
 
-	public BufferedWriter getBufferedWriterFromMap(Map<Integer, BufferedWriter> bufferedWriterMap, Integer key
+	public BufferedWriter getBufferedWriterFromMap(Map<String, BufferedWriter> bufferedWriterMap, String key
 			,String path, String filename, String ext) throws IOException{
 
 		this.getStartYear();
-		
-		bufferedWriterMap.get(key);
-		
 		
 		if(bufferedWriterMap.containsKey(key)){
 			return bufferedWriterMap.get(key);
@@ -298,8 +315,25 @@ public abstract class GenBigDataBizCore extends GenBigDataCore {
 			
 			return bufferedWriterMap.get(key);
 		}
-		
 	}
+
+	public String getDateFromMap(Map<Date, String> bufferedWriterMap, Calendar calendar) throws IOException{
+
+		this.getStartYear();
+		
+		Date date = calendar.getTime();
+		if(bufferedWriterMap.containsKey(date)){
+			return bufferedWriterMap.get(date);
+		} else {
+			String dateFormat = sdf.format(date);
+//			BufferedWriter bufferedWriter = genFilesUtils.getBufferedWriter(path, filename + key, ext);
+			
+			bufferedWriterMap.put(date, dateFormat);
+			
+			return bufferedWriterMap.get(date);
+		}
+	}
+	
 	public List<Integer> getOutstandingRandom(int outstandPerSubAcc) {
 		return GenDataDBUtils.getListInteger(1, 365);
 	}

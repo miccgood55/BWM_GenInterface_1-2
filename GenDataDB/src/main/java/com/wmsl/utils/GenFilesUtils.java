@@ -99,7 +99,7 @@ public class GenFilesUtils {
 
 		String writePositionFilename = path + filename + ext;
 		FileWriter writerPosition = new FileWriter(writePositionFilename);
-		return new BufferedWriter(writerPosition, (bufferSize == 0 ? BUFFER_SIZE : bufferSize));
+		return new BufferedWriter(writerPosition, (bufferSize == 0 ? BUFFER_SIZE : bufferSize) * 10);
 	}
 	
 }

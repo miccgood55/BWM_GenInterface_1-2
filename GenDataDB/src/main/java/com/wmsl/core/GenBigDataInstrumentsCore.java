@@ -1,7 +1,8 @@
 package com.wmsl.core;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,13 +16,17 @@ public abstract class GenBigDataInstrumentsCore extends GenBigDataBizCore {
 
 	private static final Logger log = LoggerFactory.getLogger(GenBigDataInstrumentsCore.class);
 
-	private static List<Instrument> instrumentList = new ArrayList<Instrument>();
+	private static Map<String, List<Instrument>> instrumentMap = new HashMap<String, List<Instrument>>();
 	
 	private static int INSTRUMENT_COUNT = 0;
 	
 	@Override
 	public Integer getInstrumentId() {
 
+
+		String instrumentCode = this.getInstrumentCode(); 
+		List<Instrument> instrumentList = instrumentMap.get(instrumentCode);
+		
 		int instrumentMaxIndex =  instrumentList.size();
 		Instrument instrument = instrumentList.get(INSTRUMENT_COUNT % instrumentMaxIndex);
 		INSTRUMENT_COUNT++;
@@ -34,12 +39,18 @@ public abstract class GenBigDataInstrumentsCore extends GenBigDataBizCore {
 		String instrumentCode = this.getInstrumentCode(); 
 		this.setInstrumentCode(null);
 		super.afterPropertiesSet();
+		this.setInstrumentCode(instrumentCode);
 		
-		instrumentList = coreDao.getInstrumentBySymbol(instrumentCode);
-		log.debug(instrumentCode + " : " + instrumentList.size() + " Rows");
 		
-		if(instrumentList.size() <= 0){
-			throw new DataSourceLookupFailureException("instrumentCode : " + instrumentCode + "% Not Found In DB");
+		if(!instrumentMap.containsKey(instrumentCode)){
+			List<Instrument> instrumentList = coreDao.getInstrumentBySymbol(instrumentCode);
+			log.debug(instrumentCode + " : " + instrumentList.size() + " Rows");
+			
+			if(instrumentList.size() <= 0){
+				throw new DataSourceLookupFailureException("instrumentCode : " + instrumentCode + "% Not Found In DB");
+			}
+			
+			instrumentMap.put(instrumentCode, instrumentList);
 		}
 		
 	}

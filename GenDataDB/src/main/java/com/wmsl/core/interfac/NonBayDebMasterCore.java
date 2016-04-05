@@ -3,8 +3,6 @@ package com.wmsl.core.interfac;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +30,7 @@ public class NonBayDebMasterCore extends Core{
 	}
 
 	@Override
-	public List<GenResult> execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
+	public GenResult execute() throws ServerEntityServiceException, InfoEntityServiceException, IOException {
 		log.debug("Start NonBayDebMasterCore.execute ");
 
 		BufferedWriter bufferedWriter = genFilesUtils.getBufferedWriter(Constants.DIR_NON_BAY_DEBENTURE,
@@ -58,10 +56,10 @@ public class NonBayDebMasterCore extends Core{
 			bufferedWriter.close();
 		}
 
-		List<GenResult> genResultList = new ArrayList<GenResult> ();
-		genResultList.add(new GenResult().setTotalCount(countRecord));
+//		List<GenResult> genResultList = new ArrayList<GenResult> ();
+//		genResultList.add(new GenResult().setTotalCount(countRecord));
 		
-		return genResultList;
+		return new GenResult().setTotalCount(countRecord);
 	}
 
 	public void writeNonBayDebMaster(BufferedWriter bufferedWriter, NonBayDebMaster nonBayDebMaster) throws IOException {
