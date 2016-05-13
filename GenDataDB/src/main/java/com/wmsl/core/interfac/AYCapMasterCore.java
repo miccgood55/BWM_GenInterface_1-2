@@ -67,7 +67,7 @@ public class AYCapMasterCore extends AYMasterCore{
 		ayCapMaster.setSecurityTypeCode("AYCAP");
 		ayCapMaster.setIssueDate(CURRENT_DATE_FORMAT);
 		ayCapMaster.setMatureDate(CURRENT_DATE_FORMAT);
-//		ayCapMaster.setReferenceSecurityCode(null);
+		ayCapMaster.setReferenceSecurityCode("");
 		ayCapMaster.setcurrencyCode("THB");
 		
 //		1	Issuer Code				STRING			1.Look up : CM_COMPANY[COMPANYCODE].

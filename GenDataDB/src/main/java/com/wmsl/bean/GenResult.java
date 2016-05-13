@@ -11,7 +11,9 @@ public class GenResult {
 	private long subAccountCount;
 	private long outstandingCount;
 	private long transectionCount;
-	
+
+	private String error;
+	private String stack;
 	
 	public long getTime() {
 		return time;
@@ -20,7 +22,7 @@ public class GenResult {
 		this.time = time;
 	}
 	public Calendar getYear() {
-		return year;
+		return (year == null ? Calendar.getInstance() : year);
 	}
 	public void setYear(Calendar year) {
 		this.year = year;
@@ -46,6 +48,20 @@ public class GenResult {
 	}
 	
 	
+	public String getError() {
+		return (error == null ? "" : error);
+	}
+	public String getStack() {
+		return (stack == null ? "" : stack);
+	}
+	public void setError(String error) {
+		this.error = error;
+	}
+	public void setStack(String stack) {
+		this.stack = stack;
+	}
+	
+	
 	public void addAccountCount() {
 		this.accountCount++;
 		this.totalCount++;
@@ -63,14 +79,14 @@ public class GenResult {
 		this.totalCount++;
 	}
 	
-	public void marge(GenResult genResult) {
-
-		this.totalCount += genResult.getTotalCount();
-		this.accountCount += genResult.getAccountCount();
-		this.subAccountCount += genResult.getSubAccountCount();
-		this.outstandingCount += genResult.getOutstandingCount();
-		this.transectionCount += genResult.getTransectionCount();
-		
-	}
+//	public void marge(GenResult genResult) {
+//
+//		this.totalCount += genResult.getTotalCount();
+//		this.accountCount += genResult.getAccountCount();
+//		this.subAccountCount += genResult.getSubAccountCount();
+//		this.outstandingCount += genResult.getOutstandingCount();
+//		this.transectionCount += genResult.getTransectionCount();
+//		
+//	}
 	
 }

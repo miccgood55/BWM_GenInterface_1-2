@@ -40,6 +40,7 @@ public class App {
 
 		long t1 = System.currentTimeMillis();
 		
+		List<Thread> threadList = new ArrayList<Thread>();
 		for (String startYear : startYearConfig.split("\\|")) {
 
 			for (String beanNames : beanList) {
@@ -66,7 +67,7 @@ public class App {
 
 									logs.add(" ----------------------------- ");
 									logs.add(" ====== " + beanName + " ====== ");
-									logs.add(" === Year : " + genResult.getYear().getTime() + " === ");
+									logs.add(" === Year : " + genResult.getYear() .getTime() + " === ");
 									logs.add(" === Time : " + genResult.getTime() + " sec === ");
 									logs.add(" ----------------------------- ");
 
@@ -74,7 +75,11 @@ public class App {
 									logs.add("SubAccount : " + genResult.getSubAccountCount() + " Rows");
 									logs.add("Outstanding : " + genResult.getOutstandingCount() + " Rows");
 									logs.add("Transection : " + genResult.getTransectionCount() + " Rows");
+									logs.add("Total : " + genResult.getTotalCount() + " Rows");
 
+									logs.add(genResult.getError());
+									logs.add(genResult.getStack());
+									
 //								}
 
 								isProcess = true;
