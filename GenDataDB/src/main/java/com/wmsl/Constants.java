@@ -103,6 +103,7 @@ public class Constants {
 //	public static final String DIR_MARG = DIR_BIG + "margin" + PATH_DELI;
 	public static final String DIR_MARGIN_SUM_ACC = DIR_BIG + "summary-account" + PATH_DELI;
 	public static final String DIR_MARGIN_SUM_DERI = DIR_BIG + "summary-Derivative" + PATH_DELI;
+	public static final String DIR_MARGIN_OUTSTANDING = DIR_BIG_OUTSTANDING + "margin" + PATH_DELI;
 	
 	public static final String FILE_NAME_ACCOUNT_MARGIN = "CP_ACCOUNT-MARGIN";
 	public static final String FILE_NAME_SUBACCOUNT_MARGIN = "CP_SUBACCOUNT-MARGIN";
@@ -118,6 +119,7 @@ public class Constants {
 //	public static final String DIR_LIAB = DIR_BIG + "liability" + PATH_DELI;
 	public static final String DIR_LIAB_AYCAP = DIR_BIG + "aycap" + PATH_DELI;
 	public static final String DIR_LIAB_AYCAL = DIR_BIG + "aycal" + PATH_DELI;
+	public static final String DIR_CREDITLOAN_OUTSTANDING = DIR_BIG_OUTSTANDING + "creditloan" + PATH_DELI;
 	public static final String FILE_NAME_ACCOUNT_LIAB = "CP_ACCOUNT-LIAB";
 	public static final String FILE_NAME_SUBACCOUNT_LIAB = "CP_SUBACCOUNT-LIAB";
 	public static final String FILE_NAME_OUTSTANDING_LIAB = "CP_OUTSTANDING-LIAB";

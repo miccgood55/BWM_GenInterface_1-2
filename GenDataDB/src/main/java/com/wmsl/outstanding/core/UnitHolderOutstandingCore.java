@@ -86,8 +86,6 @@ public class UnitHolderOutstandingCore extends GenOutStandingDataCore {
 
 	@Override
 	protected List<OutstandingBatch> getOutstandingList() throws InfoEntityServiceException, ServerEntityServiceException {
-
-
 		List<? extends OutstandingBatch> unitTrustOutstandingList = unitTrustOutstandingDao.getObjectList();
 		return (List<OutstandingBatch>) unitTrustOutstandingList;
 	}

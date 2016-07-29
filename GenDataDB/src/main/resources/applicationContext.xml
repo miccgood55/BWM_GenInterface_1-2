@@ -44,29 +44,6 @@
 	<!-- Core -->
 	
 <!-- 	GenOutstanding -->
-	<bean id="unitHolderOutstandingCore" scope="prototype" class="com.wmsl.outstanding.core.UnitHolderOutstandingCore">
-		<property name="coreDao">
-			<ref bean="coreDao" />
-		</property>
-		<property name="genFilesUtils">
-			<ref bean="genFilesUtils" />
-		</property>
-		<property name="unitTrustOutstandingDao">
-			<ref bean="unitTrustOutstandingDao" />
-		</property>
-		
-		<property name="startYear" value="${start.year}"/>
-		<property name="startMonth" value="${start.month}"/>
-		<property name="startDay" value="${start.day}"/>
-		
-		<property name="stopYear" value="${stop.year}"/>
-		<property name="stopMonth" value="${stop.month}"/>
-		<property name="stopDay" value="${stop.day}"/>
-			
-	</bean>
-	
-
-
 	<bean id="depositOutstandingCore" scope="prototype" class="com.wmsl.outstanding.core.DepositOutstandingCore">
 		<property name="coreDao">
 			<ref bean="coreDao" />
@@ -88,7 +65,68 @@
 		
 	</bean>
 	
+	<bean id="unitHolderOutstandingCore" scope="prototype" class="com.wmsl.outstanding.core.UnitHolderOutstandingCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		<property name="unitTrustOutstandingDao">
+			<ref bean="unitTrustOutstandingDao" />
+		</property>
+		
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
+		
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
+			
+	</bean>
 	
+	<bean id="marginOutStandingCore" scope="prototype" class="com.wmsl.outstanding.core.MarginOutStandingCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		<property name="marginOutstandingDao">
+			<ref bean="marginOutstandingDao" />
+		</property>
+		
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
+		
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
+		
+	</bean>
+	
+	<bean id="creditLoanOutStandingCore" scope="prototype" class="com.wmsl.outstanding.core.CreditLoanOutStandingCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		<property name="creditLoanOutstandingDao">
+			<ref bean="creditLoanOutstandingDao" />
+		</property>
+		
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
+		
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
+		
+	</bean>
 	
 	
 	<!-- AYCal -->
@@ -449,6 +487,25 @@
 			<ref bean="hibernateTemplate" />
 		</property>
 	</bean>
+	
+	<bean id="marginOutstandingDao" scope="prototype"
+		class="com.wealth.bwm.batch.impl.dao.cp.account.MarginOutstandingDao">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate" />
+		</property>
+	</bean>
+	
+	<bean id="creditLoanOutstandingDao" scope="prototype"
+		class="com.wealth.bwm.batch.impl.dao.cp.account.CreditLoanOutstandingDao">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate" />
+		</property>
+	</bean>
+	
+	
+	
+
+<!-- import com.wealth.bwm.batch.impl.dao.cp.account.CreditLoanOutstandingDao; -->
 
 <!-- 	subaccount -->
 
