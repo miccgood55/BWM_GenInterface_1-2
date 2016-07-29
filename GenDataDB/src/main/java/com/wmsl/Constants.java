@@ -31,9 +31,10 @@ public class Constants {
 //	public static final String DIR_LOG = "D:\\tmp\\logs\\";
 
 	public static final String PATH_DELI = "/";
-	public static final String DIR = "/Volumes/Data/BWM/Interface/tmp/gen4/";
-	public static final String DIR_BIG = "/Volumes/Data/BWM/Interface/tmp/genBig/";
-	public static final String DIR_LOG = "/Volumes/Data/BWM/Interface/tmp/logs/";
+	public static final String DIR = "/Volumes/Data/BWM/Interface/tmp/Input5Year2/";
+	public static final String DIR_BIG = "/Volumes/Data/BWM/Data/genBig/";
+	public static final String DIR_BIG_OUTSTANDING = "/Volumes/Data/BWM/Data/Outstanding/";
+	public static final String DIR_LOG = "/Volumes/Data/BWM/Data/logs/";
 
 
 //	public static final String DIR_ACCOUNT = "account" + PATH_DELI;
@@ -61,6 +62,7 @@ public class Constants {
 
 //	===  deposit  === //
 	public static final String DIR_DEP = DIR_BIG + "deposit" + PATH_DELI;
+	public static final String DIR_DEP_OUTSTANDING = DIR_BIG_OUTSTANDING + "deposit" + PATH_DELI;
 	public static final String FILE_NAME_ACCOUNT_DEPOSIT = "CP_ACCOUNT-deposit";
 	public static final String FILE_NAME_SUBACCOUNT_DEPOSIT = "CP_SUBACCOUNT-deposit";
 	public static final String FILE_NAME_OUTSTANDING_DEPOSIT = "CP_OUTSTANDING-deposit";
@@ -86,6 +88,7 @@ public class Constants {
 
 //	===  unittrust  === //
 	public static final String DIR_UNITTRUST = DIR_BIG + "unittrust" + PATH_DELI;
+	public static final String DIR_UNITTRUST_OUTSTANDING = DIR_BIG_OUTSTANDING + "unittrust" + PATH_DELI;
 	public static final String FILE_NAME_ACCOUNT_UNITTRUST = "CP_ACCOUNT-unittrust";
 	public static final String FILE_NAME_SUBACCOUNT_UNITTRUST = "CP_SUBACCOUNT-unittrust";
 	public static final String FILE_NAME_OUTSTANDING_UNITTRUST = "CP_OUTSTANDING-unittrust";

@@ -43,6 +43,54 @@
 
 	<!-- Core -->
 	
+<!-- 	GenOutstanding -->
+	<bean id="unitHolderOutstandingCore" scope="prototype" class="com.wmsl.outstanding.core.UnitHolderOutstandingCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		<property name="unitTrustOutstandingDao">
+			<ref bean="unitTrustOutstandingDao" />
+		</property>
+		
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
+		
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
+			
+	</bean>
+	
+
+
+	<bean id="depositOutstandingCore" scope="prototype" class="com.wmsl.outstanding.core.DepositOutstandingCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		<property name="depositOutstandingDao">
+			<ref bean="depositOutstandingDao" />
+		</property>
+		
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
+		
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
+		
+	</bean>
+	
+	
+	
+	
 	<!-- AYCal -->
 	<bean id="ayCalMasterCore" scope="prototype" class="com.wmsl.core.interfac.AYCalMasterCore">
 		<property name="coreDao">
@@ -369,7 +417,6 @@
 
 
 	<!-- DAO -->
-
 	<bean id="coreDao" scope="prototype" class="com.wmsl.dao.impl.CoreDao">
 
 		<!-- <property name="sessionFactory"> -->
@@ -381,19 +428,29 @@
 	</bean>
 
  
-
+<!-- 	customer -->
 	<bean id="customerDao" scope="prototype" class="com.wealth.bwm.impl.dao.cp.CustomerDao">
 		<property name="hibernateTemplate">
 			<ref bean="hibernateTemplate" />
 		</property>
 	</bean>
 	
-	<bean id="outstandingdao" scope="prototype"
-		class="com.wealth.bwm.impl.dao.cp.account.outstanding.OutstandingDao">
+<!-- 	outstanding -->
+	<bean id="depositOutstandingDao" scope="prototype"
+		class="com.wealth.bwm.batch.impl.dao.cp.account.DepositOutstandingDao">
 		<property name="hibernateTemplate">
 			<ref bean="hibernateTemplate" />
 		</property>
 	</bean>
+
+	<bean id="unitTrustOutstandingDao" scope="prototype"
+		class="com.wealth.bwm.batch.impl.dao.cp.account.UnitTrustOutstandingDao">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate" />
+		</property>
+	</bean>
+
+<!-- 	subaccount -->
 
 	<bean id="subBankAccountDao" scope="prototype"
 		class="com.wealth.bwm.impl.dao.cp.account.SubBankAccountDao">
