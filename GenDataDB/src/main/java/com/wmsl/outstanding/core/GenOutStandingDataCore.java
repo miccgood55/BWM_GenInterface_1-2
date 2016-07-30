@@ -119,19 +119,20 @@ public abstract class GenOutStandingDataCore extends Core implements Initializin
 
 //			String startDateFormat = SDF.format(startDateD);
 
-			for (Calendar outStandingDate = (Calendar) startDate.clone(); outStandingDate.before(stopDate); 
+			for (Calendar outStandingDate = (Calendar) startDate.clone(); 
+					outStandingDate.before(stopDate) || outStandingDate.equals(stopDate); 
 					outStandingDate.add(Calendar.DATE, 1)) {
 
+				String dateFormat = getDateFromMap(bufferedWriterDateMap, outStandingDate);
+
+				String outstandingYearMonth = getCurrentYearMonth(outStandingDate);
+				
 				for (OutstandingBatch outstandingInfo : outstandingList) {
 
 					try {
 
 						OutstandingBatch outstanding = outstandingInfo;
-								
-						String dateFormat = getDateFromMap(bufferedWriterDateMap, outStandingDate);// sdf.format(outStandingDate.getTime());
-
-						String outstandingYearMonth = getCurrentYearMonth(outStandingDate);
-
+						
 						BufferedWriter bufferedWriterOutStanding = getBufferedWriterFromMap(bufferedWriterOutStandingMap, outstandingYearMonth,
 								getDir(Constants.DIR_OUTSTANDING), getFilenameOutstanding(), Constants.FILENAME_BIG_EXT);
 
@@ -152,7 +153,7 @@ public abstract class GenOutStandingDataCore extends Core implements Initializin
 
 				}
 				// Do your job here with `date`.
-				System.out.println(outStandingDate.getTime());
+				System.out.println(dateFormat);
 			}
 		} catch (
 
@@ -330,6 +331,8 @@ public abstract class GenOutStandingDataCore extends Core implements Initializin
 //		outstanding.setUnit(outstandingInfo.getUnit());
 //		outstanding.setMarketValue(outstandingInfo.getMarketValue());
 //		outstanding.setLocalMarketValue(outstandingInfo.getLocalMarketValue());
+		outstanding.setMarketExchangeDate(dateFormat);
+		outstanding.setMtmDate(dateFormat);
 		outstanding.setLastUpdateDate(dateFormat);
 		outstanding.setLastUpdateTime("00:00:00");
 		outstanding.setLastUpdateBy(1);

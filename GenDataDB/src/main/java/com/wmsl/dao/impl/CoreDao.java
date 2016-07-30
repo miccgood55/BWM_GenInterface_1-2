@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.wealth.bwm.batch.impl.entity.cp.account.SnapshotAccountBatch;
 import com.wealth.bwm.common.impl.entity.instrument.Instrument;
 import com.wealth.bwm.impl.entity.cp.account.MarginAccount;
 import com.wealth.dao.impl.GenericDAOHibernate;
@@ -143,5 +144,27 @@ public class CoreDao extends GenericDAOHibernate<Integer, Integer> implements IC
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	@Override
+	public Integer getNextSnapshotAccountId() {
+
+		Session session = this.getSession();
+		session.beginTransaction();
+		Query query = session.createQuery("SELECT MAX(o.snapshotAccountId) + 1 from SnapshotAccountBatch o ");
+
+		Integer max = (Integer) query.uniqueResult();
+		return (max == null ? 1 : max);
+	}
+
+	@Override
+	public Integer getNextPortHoldingId() {
+
+		Session session = this.getSession();
+		session.beginTransaction();
+		Query query = session.createQuery("SELECT MAX(o.portHoldingId) + 1 from PortHoldingBySubAccountBatch o ");
+
+		Integer max = (Integer) query.uniqueResult();
+		return (max == null ? 1 : max);
 	}
 }

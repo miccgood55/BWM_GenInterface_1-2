@@ -31,10 +31,14 @@ public class Constants {
 //	public static final String DIR_LOG = "D:\\tmp\\logs\\";
 
 	public static final String PATH_DELI = "/";
-	public static final String DIR = "/Volumes/Data/BWM/Interface/tmp/Input5Year2/";
-	public static final String DIR_BIG = "/Volumes/Data/BWM/Data/genBig/";
-	public static final String DIR_BIG_OUTSTANDING = "/Volumes/Data/BWM/Data/Outstanding/";
-	public static final String DIR_LOG = "/Volumes/Data/BWM/Data/logs/";
+	public static final String DIR_INTERFACE = "/Volumes/Data/BWM/Interface/tmp/Input5Year2/";
+	public static final String DIR_DATA = "/Volumes/Data/BWM/Data/";
+	public static final String DIR_BIG = DIR_DATA + "genBig/";
+	public static final String DIR_BIG_OUTSTANDING = DIR_DATA + "Outstanding/";
+	public static final String DIR_BIG_EXECUTION = DIR_DATA + "Execution/";
+	public static final String DIR_BIG_SNAPSHOTACCOUNT = DIR_DATA + "SnapshotAccount/";
+	public static final String DIR_BIG_PORTHOLDING = DIR_DATA + "PortHolding/";
+	public static final String DIR_LOG = DIR_DATA + "logs/";
 
 
 //	public static final String DIR_ACCOUNT = "account" + PATH_DELI;
@@ -63,6 +67,7 @@ public class Constants {
 //	===  deposit  === //
 	public static final String DIR_DEP = DIR_BIG + "deposit" + PATH_DELI;
 	public static final String DIR_DEP_OUTSTANDING = DIR_BIG_OUTSTANDING + "deposit" + PATH_DELI;
+	public static final String DIR_DEP_EXECUTION = DIR_BIG_EXECUTION + "deposit" + PATH_DELI;
 	public static final String FILE_NAME_ACCOUNT_DEPOSIT = "CP_ACCOUNT-deposit";
 	public static final String FILE_NAME_SUBACCOUNT_DEPOSIT = "CP_SUBACCOUNT-deposit";
 	public static final String FILE_NAME_OUTSTANDING_DEPOSIT = "CP_OUTSTANDING-deposit";
@@ -76,6 +81,7 @@ public class Constants {
 //	===  fixed  === //
 	public static final String DIR_FIXED = DIR_BIG + "fixed" + PATH_DELI;
 	public static final String DIR_NONBAY = DIR_BIG + "nonbay" + PATH_DELI;
+	public static final String DIR_NONBAY_EXECUTION = DIR_BIG_EXECUTION + "nonbay" + PATH_DELI;
 	public static final String FILE_NAME_ACCOUNT_FIXED = "CP_ACCOUNT-fixed";
 	public static final String FILE_NAME_SUBACCOUNT_FIXED = "CP_SUBACCOUNT-fixed";
 	public static final String FILE_NAME_OUTSTANDING_FIXED = "CP_OUTSTANDING-fixed";
@@ -89,6 +95,7 @@ public class Constants {
 //	===  unittrust  === //
 	public static final String DIR_UNITTRUST = DIR_BIG + "unittrust" + PATH_DELI;
 	public static final String DIR_UNITTRUST_OUTSTANDING = DIR_BIG_OUTSTANDING + "unittrust" + PATH_DELI;
+	public static final String DIR_UNITTRUST_EXECUTION = DIR_BIG_EXECUTION + "unittrust" + PATH_DELI;
 	public static final String FILE_NAME_ACCOUNT_UNITTRUST = "CP_ACCOUNT-unittrust";
 	public static final String FILE_NAME_SUBACCOUNT_UNITTRUST = "CP_SUBACCOUNT-unittrust";
 	public static final String FILE_NAME_OUTSTANDING_UNITTRUST = "CP_OUTSTANDING-unittrust";
@@ -131,9 +138,15 @@ public class Constants {
 	public static final String FILE_NAME_LIAB_TX = "CP_CREDITLOANEXECUTION";
 
 	
+//	SnapshotAccount
+//	public static final String DIR_SNAPSHOTACCOUNT = DIR_BIG_EXECUTION + "SnapshotAccount" + PATH_DELI;
+	public static final String FILE_NAME_SNAPSHOTACCOUNT = "CRM_SNAPSHOTACCOUNT";
+	
+//	portholding
+	public static final String FILE_NAME_PORTHOLDING = "CRM_PORTHOLDINGBYSUBACCOUNT";
 	
 //	gen interface 1.2
-	public static final String DIR_MARGIN = DIR + "margin" + PATH_DELI;
+	public static final String DIR_MARGIN = DIR_INTERFACE + "margin" + PATH_DELI;
 	
 	public static final String FILE_NAME_EQ = "bwm_kss_eq_mar_acc_mly_";
 	public static final String FILE_NAME_DERI = "bwm_kss_deri_mar_acc_mly_";
@@ -142,14 +155,14 @@ public class Constants {
 	public static final String FILE_NAME_DERI_POS = "bwm_kss_deri_mar_pos_mly_";
 	
 	
-	public static final String DIR_NON_BAY_DEBENTURE = DIR + "Non-Bay-Debenture" + PATH_DELI;
+	public static final String DIR_NON_BAY_DEBENTURE = DIR_INTERFACE + "Non-Bay-Debenture" + PATH_DELI;
 	
 	public static final String FILE_NAME_NON_BAY_DEBENTURE_MASTER = "bwm_Deb_NONBAY_mas_wly_";
 	public static final String FILE_NAME_NON_BAY_DEBENTURE_TX = "bwm_Deb_NONBAY_trans_wly_";
 	
 	
-	public static final String DIR_AYCAP = DIR + "AYCap" + PATH_DELI;
-	public static final String DIR_AYCAL = DIR + "AYCal" + PATH_DELI;
+	public static final String DIR_AYCAP = DIR_INTERFACE + "AYCap" + PATH_DELI;
+	public static final String DIR_AYCAL = DIR_INTERFACE + "AYCal" + PATH_DELI;
 	
 	public static final String FILE_NAME_AYCAP_MASTER = "bwm_Loan_AYCAP_mas_mly_";
 	public static final String FILE_NAME_AYCAP_POS = "bwm_Loan_AYCAP_pos_mly_";

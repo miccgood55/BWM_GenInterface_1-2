@@ -43,6 +43,121 @@
 
 	<!-- Core -->
 	
+<!-- 	SnapShot -->
+	
+	<bean id="genPortHoldingDataCore" scope="prototype" class="com.wmsl.duplicate.core.GenPortHoldingDataCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		<property name="portHoldingDao">
+			<ref bean="portHoldingDao" />
+		</property>
+		
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
+		
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
+		
+	</bean>
+	
+	<bean id="genSnapShotDataCore" scope="prototype" class="com.wmsl.duplicate.core.GenSnapShotDataCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		<property name="snapshotAccountDao">
+			<ref bean="snapshotAccountDao" />
+		</property>
+		
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
+		
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
+		
+	</bean>
+	
+<!-- 	Execution -->
+	<bean id="depositExecutionCore" scope="prototype" class="com.wmsl.execution.core.DepositExecutionCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		<property name="depositExecutionDao">
+			<ref bean="depositExecutionDao" />
+		</property>
+		
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
+		
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
+		<property name="prefixTx" value="${depositExecution.prefix_tx}"/>
+		
+	</bean>
+	
+	<bean id="unitHolderExecutionCore" scope="prototype" class="com.wmsl.execution.core.UnitHolderExecutionCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		<property name="unitTrustExecutionDao">
+			<ref bean="unitTrustExecutionDao" />
+		</property>
+		
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
+		
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
+		<property name="prefixTx" value="${unitHolderExecution.prefix_tx}"/>
+			
+	</bean>
+	
+	
+	<bean id="fixedIncomeExecutionCore" scope="prototype" class="com.wmsl.execution.core.FixedIncomeExecutionCore">
+		<property name="coreDao">
+			<ref bean="coreDao" />
+		</property>
+		<property name="genFilesUtils">
+			<ref bean="genFilesUtils" />
+		</property>
+		<property name="fixedIncomeExecutionDao">
+			<ref bean="fixedIncomeExecutionDao" />
+		</property>
+		
+		<property name="startYear" value="${start.year}"/>
+		<property name="startMonth" value="${start.month}"/>
+		<property name="startDay" value="${start.day}"/>
+		
+		<property name="stopYear" value="${stop.year}"/>
+		<property name="stopMonth" value="${stop.month}"/>
+		<property name="stopDay" value="${stop.day}"/>
+		<property name="prefixTx" value="${fixedIncomeExecution.prefix_tx}"/>
+			
+	</bean>
+	
+	
+	
+	
 <!-- 	GenOutstanding -->
 	<bean id="depositOutstandingCore" scope="prototype" class="com.wmsl.outstanding.core.DepositOutstandingCore">
 		<property name="coreDao">
@@ -468,6 +583,45 @@
  
 <!-- 	customer -->
 	<bean id="customerDao" scope="prototype" class="com.wealth.bwm.impl.dao.cp.CustomerDao">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate" />
+		</property>
+	</bean>
+	
+<!-- 	execution -->
+	
+	<bean id="snapshotAccountDao" scope="prototype"
+		class="com.wmsl.dao.impl.SnapshotAccountDao">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate" />
+		</property>
+	</bean>
+	
+	<bean id="portHoldingDao" scope="prototype"
+		class="com.wmsl.dao.impl.PortHoldingDao">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate" />
+		</property>
+	</bean>
+	
+<!-- 	execution -->
+	
+	<bean id="depositExecutionDao" scope="prototype"
+		class="com.wmsl.dao.impl.DepositExecutionDao">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate" />
+		</property>
+	</bean>
+	
+	<bean id="unitTrustExecutionDao" scope="prototype"
+		class="com.wmsl.dao.impl.UnitTrustExecutionDao">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate" />
+		</property>
+	</bean>
+
+	<bean id="fixedIncomeExecutionDao" scope="prototype"
+		class="com.wmsl.dao.impl.FixedIncomeExecutionDao">
 		<property name="hibernateTemplate">
 			<ref bean="hibernateTemplate" />
 		</property>

@@ -14,4 +14,6 @@ public interface ICoreDao extends IGenericDAO<Integer, Integer> {
 	List<CustomerInfo> getPersonCustomerByFirstNameEn(String firstNameEn);
 	List<MarginAccount> getMarginAccountByCode(String accountCode);
 	List<Instrument> getInstrumentBySymbol(String symbol);
+	Integer getNextSnapshotAccountId();
+	Integer getNextPortHoldingId();
 }
